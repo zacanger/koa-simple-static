@@ -46,6 +46,12 @@ module.exports = function staticCache(dir, options, files) {
   }
 
   return async (ctx, next) => {
+    if (options.links && Array.isArray(options.links)) {
+      options.links.forEach((link) => {
+        ctx.append('Link', `<${link}>; rel=preload;`)
+      })
+    }
+
     // only accept HEAD and GET
     if (ctx.method !== 'HEAD' && ctx.method !== 'GET') return await next()
     // check prefix first to avoid calculate
