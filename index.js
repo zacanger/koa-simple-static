@@ -46,14 +46,11 @@ module.exports = function staticCache(dir, options, files) {
   }
 
   return async (ctx, next) => {
-    if (options.links && Array.isArray(options.links) && options.links.length) {
-      options.links.forEach((link) => {
-        const t = link.endsWith('.css')
-          ? 'style'
-          : link.endsWith('.js')
-            ? 'script'
-            : ''
-        ctx.append('Link', `<${link}>; rel=preload; as=${t};`)
+    if (options.extraHeaders && Array.isArray(options.extraHeaders) && options.extraHeaders.length) {
+      options.extraHeaders.forEach((header) => {
+        for (let h in header) {
+          ctx.append(h, header[h])
+        }
       })
     }
 
