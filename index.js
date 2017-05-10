@@ -46,7 +46,7 @@ module.exports = function staticCache(dir, options, files) {
   }
 
   return async (ctx, next) => {
-    if (options.links && Array.isArray(options.links)) {
+    if (options.links && Array.isArray(options.links) && options.links.length) {
       options.links.forEach((link) => {
         ctx.append('Link', `<${link}>; rel=preload;`)
       })
