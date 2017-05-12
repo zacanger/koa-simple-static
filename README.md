@@ -1,20 +1,6 @@
 # Koa Static Cache
 
-[![NPM version][npm-image]][npm-url]
-[![build status][travis-image]][travis-url]
-[![Test coverage][coveralls-image]][coveralls-url]
-[![David deps][david-image]][david-url]
-
-[npm-image]: https://img.shields.io/npm/v/koa-static-cache.svg?style=flat-square
-[npm-url]: https://npmjs.org/package/koa-static-cache
-[travis-image]: https://img.shields.io/travis/koajs/static-cache.svg?style=flat-square
-[travis-url]: https://travis-ci.org/koajs/static-cache
-[coveralls-image]: https://img.shields.io/coveralls/koajs/static-cache.svg?style=flat-square
-[coveralls-url]: https://coveralls.io/r/koajs/static-cache?branch=master
-[david-image]: https://img.shields.io/david/koajs/static-cache.svg?style=flat-square
-[david-url]: https://david-dm.org/koajs/static-cache
-
-Static server for koa.
+Static server for Koa.
 
 Differences between this library and other libraries such as [static](https://github.com/koajs/static):
 
@@ -22,7 +8,6 @@ Differences between this library and other libraries such as [static](https://gi
 - You may optionally store the data in memory - it streams by default.
 - Caches the assets on initialization - you need to restart the process to update the assets.(can turn off with options.preload = false)
 - Uses MD5 hash sum as an ETag.
-- Uses .gz files if present on disk, like nginx gzip_static module
 
 ## Installation
 
@@ -32,85 +17,27 @@ $ npm install koa-static-cache
 
 ## API
 
-### staticCache(dir [, options] [, files])
+### staticCache(options)
 
 ```js
 var path = require('path')
 var staticCache = require('koa-static-cache')
 
-app.use(staticCache(path.join(__dirname, 'public'), {
+app.use(staticCache({
+  dir: path.resolve(__dirname, 'public'),
   maxAge: 365 * 24 * 60 * 60
 }))
 ```
 
-- `dir` (str) - the directory you wish to serve, priority than `options.dir`.
 - `options.dir` (str) - the directory you wish to serve, default to `process.cwd`.
 - `options.maxAge` (int) - cache control max age for the files, `0` by default.
 - `options.cacheControl` (str) - optional cache control header. Overrides `options.maxAge`.
 - `options.buffer` (bool) - store the files in memory instead of streaming from the filesystem on each request.
 - `options.gzip` (bool) - when request's accept-encoding include gzip, files will compressed by gzip.
-- `options.usePrecompiledGzip` (bool) - try use gzip files, loaded from disk, like nginx gzip_static
-- `options.alias` (obj) - object map of aliases. See below.
 - `options.prefix` (str) - the url prefix you wish to add, default to `''`.
-- `files` (obj) - optional files object. See below.
 - `options.dynamic` (bool) - dynamic load file which not cached on initialization.
 - `options.filter` (function | array) - filter files at init dir, for example - skip non build (source) files. If array set - allow only listed files
 - `options.preload` (bool) - caches the assets on initialization or not, default to `true`. always work togather with `options.dynamic`.
-
-### Aliases
-
-For example, if you have this alias object:
-
-```js
-{
-  '/favicon.png': '/favicon-32.png'
-}
-```
-
-Then requests to `/favicon.png` will actually return `/favicon-32.png` without redirects or anything.
-This is particularly important when serving [favicons](https://github.com/audreyr/favicon-cheat-sheet) as you don't want to store duplicate images.
-
-### Files
-
-You can pass in an optional files object.
-This allows you to do two things:
-
-#### Combining directories into a single middleware
-
-Instead of doing:
-
-```js
-app.use(staticCache('/public/js'))
-app.use(staticCache('/public/css'))
-```
-
-You can do this:
-
-```js
-var files = {}
-
-// Mount the middleware
-app.use(staticCache('/public/js', {}, files))
-
-// Add additional files
-staticCache('/public/css', {}, files)
-```
-
-The benefit is that you'll have one less function added to the stack as well as doing one hash lookup instead of two.
-
-#### Editing the files object
-
-For example, if you want to change the max age of `/package.json`, you can do the following:
-
-```js
-var files = {}
-
-app.use(staticCache('/public', {
-  maxAge: 60 * 60 * 24 * 365
-}, files))
-
-files['/package.json'].maxAge = 60 * 60 * 24 * 30
-```
 
 ## License
 
