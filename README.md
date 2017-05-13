@@ -39,6 +39,18 @@ app.use(serve({
 - `filter` (function | array) - filter files at init dir, for example - skip non build (source) files. If array set - allow only listed files
 - `preload` (bool) - caches the assets on initialization or not, default to `true`. always work togather with `options.dynamic`.
 
+## Contributing
+
+* Please do, if you want! I'll consider any PRs, but no promises.
+* Notes:
+  * This project uses Flow.
+  * It will be easiest if you have your editor configured to work with `eslint`
+    and `flow`.
+  * Please run tests!
+  * Please _add_ tests, if you're adding functionality.
+  * The top item on my todo-list here is moving all the tests to just use `tape`
+    (with `babel-tape-runner`).
+
 ## License
 
 The MIT License (MIT)
