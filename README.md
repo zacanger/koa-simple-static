@@ -57,8 +57,10 @@ console.log(`Serving on ${port}!`)
     and `flow`.
   * Please run tests!
   * Please _add_ tests, if you're adding functionality.
-  * The top item on my todo-list here is moving all the tests to just use `tape`
-    (with `babel-tape-runner`).
+  * My top priority right now is reducing dependencies:
+    * Using Node's `zlib` and `fs` instead of `mz`
+    * Removing `regenerator`
+  * I would also like to add typings for TypeScript users.
 
 ## License
 
