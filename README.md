@@ -23,7 +23,7 @@ app.use(serve({
 ### Options
 
 * `dir : str` &mdash; directory you want to serve
-* `maxAge : ?int = 0` &mdash; cache control max age
+* `maxAge : ?number = 0` &mdash; cache control max age (in seconds)
 * `gzip : ?bool = false` &mdash; compress with gzip when request's `accept-encoding` includes gzip
 * `extraHeaders : ?Object[]` &mdash; any extra headers you wish to set for requests served by this module
   * The format for this is `[ { 'Link': '</foo.js>; rel=preload; as=script' }, { 'Set-Cookie': 'foo=bar; path=/;' } ]`

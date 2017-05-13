@@ -1,8 +1,8 @@
 // @flow
 
 import { createHash } from 'crypto'
-import { createReadStream, statSync, readFileSync } from 'fs'
-import { gzip, createGzip } from 'zlib'
+import { createReadStream, statSync, readFileSync } from 'mz/fs'
+import { gzip, createGzip } from 'mz/zlib'
 import { normalize, join, basename, sep } from 'path'
 import { lookup } from 'mime-types'
 import compressible from 'compressible'
