@@ -1,116 +1,64 @@
-# Koa Static Cache
+# Koa Simple Static
 
-[![NPM version][npm-image]][npm-url]
-[![build status][travis-image]][travis-url]
-[![Test coverage][coveralls-image]][coveralls-url]
-[![David deps][david-image]][david-url]
+Simple caching static file server for Koa 2.
 
-[npm-image]: https://img.shields.io/npm/v/koa-static-cache.svg?style=flat-square
-[npm-url]: https://npmjs.org/package/koa-static-cache
-[travis-image]: https://img.shields.io/travis/koajs/static-cache.svg?style=flat-square
-[travis-url]: https://travis-ci.org/koajs/static-cache
-[coveralls-image]: https://img.shields.io/coveralls/koajs/static-cache.svg?style=flat-square
-[coveralls-url]: https://coveralls.io/r/koajs/static-cache?branch=master
-[david-image]: https://img.shields.io/david/koajs/static-cache.svg?style=flat-square
-[david-url]: https://david-dm.org/koajs/static-cache
+--------
 
-Static server for koa.
-
-Differences between this library and other libraries such as [static](https://github.com/koajs/static):
-
-- There is no directory or `index.html` support.
-- You may optionally store the data in memory - it streams by default.
-- Caches the assets on initialization - you need to restart the process to update the assets.(can turn off with options.preload = false)
-- Uses MD5 hash sum as an ETag.
-- Uses .gz files if present on disk, like nginx gzip_static module
+This is a fork of [koa-static-cache](https://github.com/koajs/static-cache), with simpler options.
 
 ## Installation
 
-```js
-$ npm install koa-static-cache
+```
+npm i -S koa-simple-static
 ```
 
-## API
+## Usage
 
-### staticCache(dir [, options] [, files])
-
-```js
-var path = require('path')
-var staticCache = require('koa-static-cache')
-
-app.use(staticCache(path.join(__dirname, 'public'), {
-  maxAge: 365 * 24 * 60 * 60
+```javascript
+app.use(serve({
+  dir: process.cwd()
 }))
 ```
 
-- `dir` (str) - the directory you wish to serve, priority than `options.dir`.
-- `options.dir` (str) - the directory you wish to serve, default to `process.cwd`.
-- `options.maxAge` (int) - cache control max age for the files, `0` by default.
-- `options.cacheControl` (str) - optional cache control header. Overrides `options.maxAge`.
-- `options.buffer` (bool) - store the files in memory instead of streaming from the filesystem on each request.
-- `options.gzip` (bool) - when request's accept-encoding include gzip, files will compressed by gzip.
-- `options.usePrecompiledGzip` (bool) - try use gzip files, loaded from disk, like nginx gzip_static
-- `options.alias` (obj) - object map of aliases. See below.
-- `options.prefix` (str) - the url prefix you wish to add, default to `''`.
-- `files` (obj) - optional files object. See below.
-- `options.dynamic` (bool) - dynamic load file which not cached on initialization.
-- `options.filter` (function | array) - filter files at init dir, for example - skip non build (source) files. If array set - allow only listed files
-- `options.preload` (bool) - caches the assets on initialization or not, default to `true`. always work togather with `options.dynamic`.
+### Options
 
-### Aliases
+* `dir : str` &mdash; directory you want to serve
+* `maxAge : ?int = 0` &mdash; cache control max age
+* `gzip : ?bool = false` &mdash; compress with gzip when request's `accept-encoding` includes gzip
+* `extraHeaders : ?Object[]` &mdash; any extra headers you wish to set for requests served by this module
+  * The format for this is `[ { 'Link': '</foo.js>; rel=preload; as=script' }, { 'Set-Cookie': 'foo=bar; path=/;' } ]`
 
-For example, if you have this alias object:
+### Example
 
-```js
-{
-  '/favicon.png': '/favicon-32.png'
-}
+```javascript
+import serve from 'koa-simple-static'
+import { resolve } from 'path'
+import Koa from 'koa'
+
+const app = new Koa()
+const port = process.env.PORT || 4444
+
+app.use(serve({
+  dir: resolve(__dirname, 'public'),
+  gzip: true,
+  extraHeaders: [ { 'X-Something-Whatever': 'foo, bar' } ]
+}))
+
+app.listen(port)
+console.log(`Serving on ${port}!`)
 ```
 
-Then requests to `/favicon.png` will actually return `/favicon-32.png` without redirects or anything.
-This is particularly important when serving [favicons](https://github.com/audreyr/favicon-cheat-sheet) as you don't want to store duplicate images.
+## Contributing
 
-### Files
-
-You can pass in an optional files object.
-This allows you to do two things:
-
-#### Combining directories into a single middleware
-
-Instead of doing:
-
-```js
-app.use(staticCache('/public/js'))
-app.use(staticCache('/public/css'))
-```
-
-You can do this:
-
-```js
-var files = {}
-
-// Mount the middleware
-app.use(staticCache('/public/js', {}, files))
-
-// Add additional files
-staticCache('/public/css', {}, files)
-```
-
-The benefit is that you'll have one less function added to the stack as well as doing one hash lookup instead of two.
-
-#### Editing the files object
-
-For example, if you want to change the max age of `/package.json`, you can do the following:
-
-```js
-var files = {}
-
-app.use(staticCache('/public', {
-  maxAge: 60 * 60 * 24 * 365
-}, files))
-
-files['/package.json'].maxAge = 60 * 60 * 24 * 30
-```
+* Please do, if you want! I'll consider any PRs, but no promises.
+* Notes:
+  * This project uses Flow.
+  * It will be easiest if you have your editor configured to work with `eslint`
+    and `flow`.
+  * Please run tests!
+  * Please _add_ tests, if you're adding functionality.
+  * The top item on my todo-list here is moving all the tests to just use `tape`
+    (with `babel-tape-runner`).
 
 ## License
 

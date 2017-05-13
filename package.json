@@ -1,66 +1,75 @@
 {
-  "name": "koa-static-cache",
-  "description": "Static cache for koa",
-  "version": "5.0.5",
+  "name": "koa-simple-static",
+  "description": "Simple caching static file server for Koa 2.",
+  "version": "1.0.0",
   "author": {
-    "name": "Jonathan Ong",
-    "email": "me@jongleberry.com",
-    "url": "http://jongleberry.com",
-    "twitter": "https://twitter.com/jongleberry"
+    "name": "Zac Anger",
+    "email": "zac@zacanger.com",
+    "url": "http://zacanger.com"
   },
-  "contributors": [
-    {
-      "name": "Jeremiah Senkpiel",
-      "email": "fishrock123@rocketmail.com",
-      "url": "https://searchbeam.jit.su",
-      "twitter": "https://twitter.com/fishrock123"
-    },
-    {
-      "name": "dead_horse",
-      "email": "dead_horse@qq.com",
-      "url": "http://deadhorse.me",
-      "twitter": "https://twitter.com/deadhorse_busi"
-    }
-  ],
-  "files": [
-    "index.js"
-  ],
-  "keywords": [
-    "koa",
-    "middleware",
-    "file",
-    "static",
-    "cache",
-    "gzip",
-    "sendfile"
-  ],
   "license": "MIT",
+  "main": "lib/index.js",
+  "scripts": {
+    "build": "babel src/index.js --out-file lib/index.js",
+    "clean": "if [ -d lib ] ; then rm -r lib ; fi && mkdir lib",
+    "prebuild": "npm run test && npm run clean",
+    "test": "npm run test:lint && npm run test:flow",
+    "test:flow": "flow && flow stop",
+    "test:lint": "eslint -c .eslintrc.json src",
+    "test:tape": "babel-tape-runner test.js | tap-spec"
+  },
+  "homepage": "https://github.com/zacanger/koa-simple-static#readme",
   "repository": {
     "type": "git",
-    "url": "https://github.com/koajs/static-cache.git"
+    "url": "https://github.com/zacanger/koa-simple-static.git"
   },
   "bugs": {
-    "mail": "me@jongleberry.com",
-    "url": "https://github.com/koajs/static-cache/issues"
+    "url": "https://github.com/zacanger/koa-simple-static/issues"
   },
+  "keywords": [
+    "cache",
+    "file",
+    "gzip",
+    "koa",
+    "middleware",
+    "sendfile",
+    "static"
+  ],
   "dependencies": {
-    "compressible": "~2.0.6",
-    "debug": "*",
-    "fs-readdir-recursive": "~1.0.0",
-    "mime-types": "~2.1.8",
-    "mz": "~2.4.0"
+    "compressible": "2.0.10",
+    "fs-readdir-recursive": "1.0.0",
+    "mime-types": "2.1.15"
   },
   "devDependencies": {
-    "bluebird": "3",
-    "istanbul": "~0.4.1",
-    "koa": "2",
-    "mocha": "2",
-    "should": "8",
-    "should-http": "0.0.4",
-    "supertest": "1"
-  },
-  "scripts": {
-    "test": "make test"
+    "babel-cli": "6.24.1",
+    "babel-eslint": "7.2.3",
+    "babel-plugin-transform-es2015-modules-commonjs": "6.24.1",
+    "babel-plugin-transform-export-extensions": "6.22.0",
+    "babel-plugin-transform-flow-strip-types": "6.22.0",
+    "babel-preset-babili": "0.0.12",
+    "babel-preset-env": "1.4.0",
+    "babel-tape-runner": "2.0.1",
+    "bluebird": "3.5.0",
+    "eslint": "3.19.0",
+    "eslint-config-standard": "10.2.1",
+    "eslint-plugin-babel": "4.1.1",
+    "eslint-plugin-flowtype": "2.32.1",
+    "eslint-plugin-flowtype-errors": "3.2.1",
+    "eslint-plugin-import": "2.2.0",
+    "eslint-plugin-node": "4.2.2",
+    "eslint-plugin-promise": "3.5.0",
+    "eslint-plugin-standard": "3.0.1",
+    "flow-bin": "0.46.0",
+    "flow-coverage-report": "0.3.0",
+    "istanbul": "0.4.5",
+    "koa": "2.2.0",
+    "koa-router": "7.1.1",
+    "mocha": "3.3.0",
+    "should": "11.2.1",
+    "should-http": "0.1.1",
+    "supertest": "3.0.0",
+    "tap-spec": "4.1.1",
+    "tape": "4.6.3"
   },
   "engines": {
     "node": ">= 7.6.0"
