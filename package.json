@@ -1,7 +1,7 @@
 {
   "name": "koa-simple-static",
   "description": "Simple caching static file server for Koa 2.",
-  "version": "1.0.0",
+  "version": "0.1.0",
   "author": {
     "name": "Zac Anger",
     "email": "zac@zacanger.com",
@@ -13,7 +13,7 @@
     "build": "babel src/index.js --out-file lib/index.js",
     "clean": "if [ -d lib ] ; then rm -r lib ; fi && mkdir lib",
     "prebuild": "npm run test && npm run clean",
-    "test": "npm run test:lint && npm run test:flow",
+    "test": "npm run test:lint && npm run test:flow && npm run test:tape",
     "test:flow": "flow && flow stop",
     "test:lint": "eslint -c .eslintrc.json src",
     "test:tape": "babel-tape-runner test.js | tap-spec"
