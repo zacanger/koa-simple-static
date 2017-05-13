@@ -35,40 +35,28 @@ const loadFile = (
   obj.mtime = stats.mtime
   obj.length = stats.size
   obj.md5 = createHash('md5').update(buffer).digest('base64')
-
-  if (options.buffer) {
-    obj.buffer = buffer
-  }
-
+  obj.buffer = buffer
   buffer = null
   return obj
 }
 
 type Opts = {
-  buffer: ?bool,
-  cacheControl: ?string,
   dir: string,
-  dynamic: ?bool,
   extraHeaders: ?Object[],
   gzip: ?bool,
-  maxAge: ?number,
   prefix: ?string,
-  preload: ?bool
+  maxAge: ?number
 }
 
 const staticCache = (options: Opts) => {
   const dir = options.dir
-  // prefix must be ASCII code
-  options.prefix = (options.prefix || '').replace(/\/*$/, '/')
+  options.prefix = '/'
   const files = {}
   const enableGzip = !!options.gzip
-  const filePrefix = normalize(options.prefix.replace(/^\//, ''))
 
-  if (options.preload !== false) {
-    readDir(dir).forEach((name) => {
-      loadFile(name, dir, options, files)
-    })
-  }
+  readDir(dir).forEach((name) => {
+    loadFile(name, dir, options, files)
+  })
 
   return async (ctx: Context, next: () => any) => {
     // only accept HEAD and GET
@@ -76,18 +64,11 @@ const staticCache = (options: Opts) => {
       await next()
       return
     }
+
     // check prefix first to avoid calculate
     if (ctx.path.indexOf(options.prefix) !== 0) {
       await next()
       return
-    }
-
-    if (options.extraHeaders && Array.isArray(options.extraHeaders) && options.extraHeaders.length) {
-      options.extraHeaders.forEach((header) => {
-        for (let h in header) {
-          ctx.append(h, header[h])
-        }
-      })
     }
 
     // decode for `/%E4%B8%AD%E6%96%87`
@@ -98,25 +79,12 @@ const staticCache = (options: Opts) => {
 
     // try to load file
     if (!file) {
-      if (!options.dynamic) {
-        await next()
-        return
-      }
       if (basename(filename)[0] === '.') {
         await next()
         return
       }
       if (filename.charAt(0) === sep) {
         filename = filename.slice(1)
-      }
-
-      // trim prefix
-      if (options.prefix !== '/') {
-        if (filename.indexOf(filePrefix) !== 0) {
-          await next()
-          return
-        }
-        filename = filename.slice(filePrefix.length)
       }
 
       let s
@@ -162,7 +130,7 @@ const staticCache = (options: Opts) => {
 
     ctx.type = file.type
     ctx.length = file.zipBuffer ? file.zipBuffer.length : file.length
-    ctx.set('cache-control', file.cacheControl || 'public, max-age=' + file.maxAge)
+    ctx.set('cache-control', `public, max-age=${file.maxAge}`)
     if (file.md5) ctx.set('content-md5', file.md5)
 
     if (ctx.method === 'HEAD') {
@@ -206,6 +174,14 @@ const staticCache = (options: Opts) => {
       stream.on('data', hash.update.bind(hash))
       stream.on('end', () => {
         file.md5 = hash.digest('base64')
+      })
+    }
+
+    if (options.extraHeaders && Array.isArray(options.extraHeaders) && options.extraHeaders.length) {
+      options.extraHeaders.forEach((header) => {
+        for (let h in header) {
+          ctx.append(h, header[h])
+        }
       })
     }
 

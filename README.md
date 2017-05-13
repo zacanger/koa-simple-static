@@ -15,29 +15,38 @@ npm i -S koa-simple-static
 ## Usage
 
 ```javascript
-import serve from 'koa-simple-static'
-import { resolve } from 'path'
-import Koa from 'koa'
-
-const app = new Koa()
-
 app.use(serve({
-  dir: path.resolve(__dirname, 'public')
-  // other options
+  dir: process.cwd()
 }))
 ```
 
 ### Options
 
-- `dir` (str) - the directory you wish to serve, default to `process.cwd`.
-- `maxAge` (int) - cache control max age for the files, `0` by default.
-- `cacheControl` (str) - optional cache control header. Overrides `options.maxAge`.
-- `buffer` (bool) - store the files in memory instead of streaming from the filesystem on each request.
-- `gzip` (bool) - when request's accept-encoding include gzip, files will compressed by gzip.
-- `prefix` (str) - the url prefix you wish to add, default to `''`.
-- `dynamic` (bool) - dynamic load file which not cached on initialization.
-- `filter` (function | array) - filter files at init dir, for example - skip non build (source) files. If array set - allow only listed files
-- `preload` (bool) - caches the assets on initialization or not, default to `true`. always work togather with `options.dynamic`.
+* `dir : str` &mdash; directory you want to serve
+* `maxAge : ?int = 0` &mdash; cache control max age
+* `gzip : ?bool = false` &mdash; compress with gzip when request's `accept-encoding` includes gzip
+* `extraHeaders : ?Object[]` &mdash; any extra headers you wish to set for requests served by this module
+  * The format for this is `[ { 'Link': '</foo.js>; rel=preload; as=script' }, { 'Set-Cookie': 'foo=bar; path=/;' } ]`
+
+### Example
+
+```javascript
+import serve from 'koa-simple-static'
+import { resolve } from 'path'
+import Koa from 'koa'
+
+const app = new Koa()
+const port = process.env.PORT || 4444
+
+app.use(serve({
+  dir: resolve(__dirname, 'public'),
+  gzip: true,
+  extraHeaders: [ { 'X-Something-Whatever': 'foo, bar' } ]
+}))
+
+app.listen(port)
+console.log(`Serving on ${port}!`)
+```
 
 ## Contributing
 
