@@ -1,43 +1,43 @@
-# Koa Static Cache
+# Koa Simple Static
 
-Static server for Koa.
+Simple caching static file server for Koa 2.
 
-Differences between this library and other libraries such as [static](https://github.com/koajs/static):
+--------
 
-- There is no directory or `index.html` support.
-- You may optionally store the data in memory - it streams by default.
-- Caches the assets on initialization - you need to restart the process to update the assets.(can turn off with options.preload = false)
-- Uses MD5 hash sum as an ETag.
+This is a fork of [koa-static-cache](https://github.com/koajs/static-cache), with simpler options.
 
 ## Installation
 
-```js
-$ npm install koa-static-cache
+```
+npm i -S koa-simple-static
 ```
 
-## API
+## Usage
 
-### staticCache(options)
+```javascript
+import serve from 'koa-simple-static'
+import { resolve } from 'path'
+import Koa from 'koa'
 
-```js
-var path = require('path')
-var staticCache = require('koa-static-cache')
+const app = new Koa()
 
-app.use(staticCache({
-  dir: path.resolve(__dirname, 'public'),
-  maxAge: 365 * 24 * 60 * 60
+app.use(serve({
+  dir: path.resolve(__dirname, 'public')
+  // other options
 }))
 ```
 
-- `options.dir` (str) - the directory you wish to serve, default to `process.cwd`.
-- `options.maxAge` (int) - cache control max age for the files, `0` by default.
-- `options.cacheControl` (str) - optional cache control header. Overrides `options.maxAge`.
-- `options.buffer` (bool) - store the files in memory instead of streaming from the filesystem on each request.
-- `options.gzip` (bool) - when request's accept-encoding include gzip, files will compressed by gzip.
-- `options.prefix` (str) - the url prefix you wish to add, default to `''`.
-- `options.dynamic` (bool) - dynamic load file which not cached on initialization.
-- `options.filter` (function | array) - filter files at init dir, for example - skip non build (source) files. If array set - allow only listed files
-- `options.preload` (bool) - caches the assets on initialization or not, default to `true`. always work togather with `options.dynamic`.
+### Options
+
+- `dir` (str) - the directory you wish to serve, default to `process.cwd`.
+- `maxAge` (int) - cache control max age for the files, `0` by default.
+- `cacheControl` (str) - optional cache control header. Overrides `options.maxAge`.
+- `buffer` (bool) - store the files in memory instead of streaming from the filesystem on each request.
+- `gzip` (bool) - when request's accept-encoding include gzip, files will compressed by gzip.
+- `prefix` (str) - the url prefix you wish to add, default to `''`.
+- `dynamic` (bool) - dynamic load file which not cached on initialization.
+- `filter` (function | array) - filter files at init dir, for example - skip non build (source) files. If array set - allow only listed files
+- `preload` (bool) - caches the assets on initialization or not, default to `true`. always work togather with `options.dynamic`.
 
 ## License
 
