@@ -87,7 +87,7 @@ const staticCache = (options: Opts) => {
       // handle index.html
       let hasIndex
       try {
-        hasIndex = await statSync(normalize(join(dir, `${filename}/index.html`)))
+        hasIndex = await statSync(normalize(join(dir, `${filename}/index.html`))).isFile()
       } catch (_) { }
       if (hasIndex) {
         filename = `${filename}/index.html`
