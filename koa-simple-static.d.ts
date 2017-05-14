@@ -4,7 +4,7 @@ declare function serve (opts: {
   dir: string
   gzip?: boolean
   maxAge?: number
-  extraHeaders?: Object[]
+  extraHeaders?: object[]
 }): Middleware
 
 declare namespace serve {}
