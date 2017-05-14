@@ -10,40 +10,12 @@ import staticCache from './src'
 
 const jsType = 'application/javascript; charset=utf-8'
 
-const app = new Koa()
-app.use(staticCache({
-  dir: '.'
-}))
-const server = http.createServer(app.callback())
-
-const app2 = new Koa()
-app2.use(staticCache({
-  dir: '.',
-  buffer: true
-}))
-const server2 = http.createServer(app2.callback())
-
-const app3 = new Koa()
-app3.use(staticCache({
-  dir: '.',
-  buffer: true,
-  gzip: true
-}))
-const server3 = http.createServer(app3.callback())
-
-const app4 = new Koa()
-app4.use(staticCache({
-  dir: '.',
-  gzip: true
-}))
-const server4 = http.createServer(app4.callback())
-
-test.skip('should accept abnormal path', (t) => {
+test('should accept abnormal path', (t) => {
   const app = new Koa()
-  app.use(staticCache({
-    dir: path.resolve(__dirname)
-  }))
-  request(app.listen())
+  app.use(staticCache({ dir: path.resolve(__dirname) }))
+  const server = http.createServer(app.callback())
+
+  request(server)
     .get('//src/index.js')
     .end((err, res) => {
       if (err) throw err
@@ -54,6 +26,10 @@ test.skip('should accept abnormal path', (t) => {
 
 let etag
 test('should serve files', (t) => {
+  const app = new Koa()
+  app.use(staticCache({ dir: '.' }))
+  const server = http.createServer(app.callback())
+
   request(server)
     .get('/src/index.js')
     .end((err, res) => {
@@ -70,7 +46,14 @@ test('should serve files', (t) => {
 })
 
 test('should serve files as buffers', (t) => {
-  request(server2)
+  const app = new Koa()
+  app.use(staticCache({
+    dir: '.',
+    buffer: true
+  }))
+  const server = http.createServer(app.callback())
+
+  request(server)
     .get('/src/index.js')
     .end((err, res) => {
       if (err) throw err
@@ -86,6 +69,10 @@ test('should serve files as buffers', (t) => {
 })
 
 test('should serve recursive files', (t) => {
+  const app = new Koa()
+  app.use(staticCache({ dir: '.' }))
+  const server = http.createServer(app.callback())
+
   request(server)
     .get('/src/index.js')
     .end((err, res) => {
@@ -101,6 +88,10 @@ test('should serve recursive files', (t) => {
 })
 
 test('should not serve hidden files', (t) => {
+  const app = new Koa()
+  app.use(staticCache({ dir: '.' }))
+  const server = http.createServer(app.callback())
+
   request(server)
     .get('/.gitignore')
     .end((err, res) => {
@@ -111,6 +102,10 @@ test('should not serve hidden files', (t) => {
 })
 
 test('should support conditional HEAD requests', (t) => {
+  const app = new Koa()
+  app.use(staticCache({ dir: '.' }))
+  const server = http.createServer(app.callback())
+
   request(server)
     .head('/src/index.js')
     .set('If-None-Match', etag)
@@ -122,6 +117,10 @@ test('should support conditional HEAD requests', (t) => {
 })
 
 test('should support conditional GET requests', (t) => {
+  const app = new Koa()
+  app.use(staticCache({ dir: '.' }))
+  const server = http.createServer(app.callback())
+
   request(server)
     .get('/src/index.js')
     .set('If-None-Match', etag)
@@ -133,6 +132,10 @@ test('should support conditional GET requests', (t) => {
 })
 
 test('should support HEAD', (t) => {
+  const app = new Koa()
+  app.use(staticCache({ dir: '.' }))
+  const server = http.createServer(app.callback())
+
   request(server)
     .head('/src/index.js')
     .end((err, res) => {
@@ -144,6 +147,10 @@ test('should support HEAD', (t) => {
 })
 
 test('should support 404 Not Found for other Methods to allow downstream', (t) => {
+  const app = new Koa()
+  app.use(staticCache({ dir: '.' }))
+  const server = http.createServer(app.callback())
+
   request(server)
     .put('/src/index.js')
     .end((err, res) => {
@@ -154,6 +161,10 @@ test('should support 404 Not Found for other Methods to allow downstream', (t) =
 })
 
 test('should ignore query strings', (t) => {
+  const app = new Koa()
+  app.use(staticCache({ dir: '.' }))
+  const server = http.createServer(app.callback())
+
   request(server)
     .get('/src/index.js?query=string')
     .end((err, res) => {
@@ -164,6 +175,10 @@ test('should ignore query strings', (t) => {
 })
 
 test('should set the etag and content-md5 headers', (t) => {
+  const app = new Koa()
+  app.use(staticCache({ dir: '.' }))
+  const server = http.createServer(app.callback())
+
   const pk = fs.readFileSync('package.json')
   const md5 = crypto.createHash('md5').update(pk).digest('base64')
 
@@ -179,10 +194,18 @@ test('should set the etag and content-md5 headers', (t) => {
 })
 
 test('should serve files with gzip buffer', (t) => {
+  const app = new Koa()
+  app.use(staticCache({
+    dir: '.',
+    buffer: true,
+    gzip: true
+  }))
+  const server = http.createServer(app.callback())
+
   const index = fs.readFileSync('src/index.js')
   zlib.gzip(index, (err, content) => {
     if (err) throw err
-    request(server3)
+    request(server)
       .get('/src/index.js')
       .set('Accept-Encoding', 'gzip')
       .end((err, res) => {
@@ -204,8 +227,16 @@ test('should serve files with gzip buffer', (t) => {
 })
 
 test('should not serve files with gzip buffer when accept encoding not include gzip', (t) => {
+  const app = new Koa()
+  app.use(staticCache({
+    dir: '.',
+    buffer: true,
+    gzip: true
+  }))
+  const server = http.createServer(app.callback())
+
   const index = fs.readFileSync('src/index.js')
-  request(server3)
+  request(server)
     .get('/src/index.js')
     .set('Accept-Encoding', '')
     .end((err, res) => {
@@ -224,10 +255,17 @@ test('should not serve files with gzip buffer when accept encoding not include g
 })
 
 test('should serve files with gzip stream', (t) => {
+  const app = new Koa()
+  app.use(staticCache({
+    dir: '.',
+    gzip: true
+  }))
+  const server = http.createServer(app.callback())
+
   const index = fs.readFileSync('src/index.js')
   zlib.gzip(index, (err, content) => {
     if (err) throw err
-    request(server4)
+    request(server)
       .get('/src/index.js')
       .set('Accept-Encoding', 'gzip')
       .end((err, res) => {
@@ -246,11 +284,13 @@ test('should serve files with gzip stream', (t) => {
   })
 })
 
-test.skip('should work fine when new file added', (t) => {
+test('should work fine when new file added', (t) => {
   const app = new Koa()
-  app.use(staticCache({ dir: '.', dynamic: true }))
+  app.use(staticCache({ dir: '.' }))
+  const server = http.createServer(app.callback())
   fs.writeFileSync('a.js', 'hello world')
-  request(app.listen())
+
+  request(server)
     .get('/a.js')
     .end((err, res) => {
       if (err) throw err
@@ -260,60 +300,62 @@ test.skip('should work fine when new file added', (t) => {
     })
 })
 
-test.skip('should 404 when url in dynamic mode', (t) => {
+test('should 404 when new hidden file added', (t) => {
   const app = new Koa()
-  app.use(staticCache({ dynamic: true, dir: '.' }))
-  fs.writeFileSync('a.js', 'hello world')
-
-  request(app.listen())
-    .get('/a.js')
-    .expect(404, (err) => {
-      if (err) throw err
-      fs.unlinkSync('a.js')
-      t.end()
-    })
-})
-
-test.skip('should 404 when new hidden file added in dynamic mode', (t) => {
-  const app = new Koa()
-  app.use(staticCache({ dir: '.', dynamic: true }))
+  app.use(staticCache({ dir: '.' }))
+  const server = http.createServer(app.callback())
   fs.writeFileSync('.a.js', 'hello world')
 
-  request(app.listen())
+  request(server)
     .get('/.a.js')
-    .expect(404, (err) => {
+    .end((err, res) => {
       if (err) throw err
+      t.deepEqual(404, res.status)
       fs.unlinkSync('.a.js')
       t.end()
     })
 })
 
-test.skip('should 404 when file not exist in dynamic mode', (t) => {
+test('should 404 when file not exist', (t) => {
   const app = new Koa()
-  app.use(staticCache({ dir: '.', dynamic: true }))
-  request(app.listen())
+  app.use(staticCache({ dir: '.' }))
+  const server = http.createServer(app.callback())
+
+  request(server)
     .get('/a.js')
-    .expect(404)
-  t.end()
+    .end((err, res) => {
+      if (err) throw err
+      t.deepEqual(404, res.status)
+      t.end()
+    })
 })
 
-test.skip('should 404 when file not exist', (t) => {
+test('should 404 when is folder without index.html', (t) => {
   const app = new Koa()
-  app.use(staticCache({ dir: '.', dynamic: true }))
-  request(app.listen())
-    .get('/a.js')
-    .expect(404)
-  t.end()
-})
+  app.use(staticCache({ dir: '.' }))
+  const server = http.createServer(app.callback())
 
-test.skip('should 404 when is folder in dynamic mode', (t) => {
-  const a = new Koa()
-  a.use(staticCache({ dir: '.', dynamic: true }))
-  request(a.listen())
+  request(server)
     .get('/src')
     .end((err, res) => {
       if (err) throw err
       t.deepEqual(404, res.status)
+      t.end()
+    })
+})
+
+test('should fall back to index.html if available', (t) => {
+  const app = new Koa()
+  app.use(staticCache({ dir: '.' }))
+  const server = http.createServer(app.callback())
+  fs.writeFileSync('index.html', 'hello world')
+
+  request(server)
+    .get('/')
+    .end((err, res) => {
+      if (err) throw err
+      t.deepEqual(200, res.status)
+      fs.unlinkSync('index.html')
       t.end()
     })
 })
