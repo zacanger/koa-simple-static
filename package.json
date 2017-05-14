@@ -31,8 +31,10 @@
     "file",
     "gzip",
     "koa",
+    "koa2",
     "middleware",
     "sendfile",
+    "server",
     "static"
   ],
   "dependencies": {
