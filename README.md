@@ -29,22 +29,16 @@ app.use(serve({
 * `extraHeaders : ?Object[]` &mdash; any extra headers you wish to set for requests served by this module
   * The format for this is `[ { 'Link': '</foo.js>; rel=preload; as=script' }, { 'Set-Cookie': 'foo=bar; path=/;' } ]`
 
-### Note
-
-Right now, you need to rewrite `/` to `/index.html` manually. See example.
-
 ### Example
 
 ```javascript
 import serve from 'koa-simple-static'
 import { resolve } from 'path'
 import Koa from 'koa'
-import rewrite from 'koa-rewrite'
 
 const app = new Koa()
 const port = process.env.PORT || 4444
 
-app.use(rewrite(/^\/$/, '/index.html'))
 app.use(serve({
   dir: resolve(__dirname, 'public'),
   gzip: true,
@@ -68,7 +62,6 @@ console.log(`Serving on ${port}!`)
     * Using Node's `zlib` and `fs` instead of `mz`
     * Removing `regenerator`
     * Adding typings for TypeScript users
-    * Adding `index.html` support
 
 ## License
 

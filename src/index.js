@@ -7,7 +7,7 @@ import { normalize, join, basename, sep } from 'path'
 import { lookup } from 'mime-types'
 import compressible from 'compressible'
 import readDir from 'fs-readdir-recursive'
-import { Context } from 'koa-router'
+import { Context } from 'koa'
 
 const safeDecodeURIComponent = (t: string): string => {
   try {
@@ -83,6 +83,16 @@ const staticCache = (options: Opts) => {
         await next()
         return
       }
+
+      // handle index.html
+      let hasIndex
+      try {
+        hasIndex = await statSync(normalize(join(dir, `${filename}/index.html`)))
+      } catch (_) { }
+      if (hasIndex) {
+        filename = `${filename}/index.html`
+      }
+
       if (filename.charAt(0) === sep) {
         filename = filename.slice(1)
       }
@@ -131,7 +141,10 @@ const staticCache = (options: Opts) => {
     ctx.type = file.type
     ctx.length = file.zipBuffer ? file.zipBuffer.length : file.length
     ctx.set('cache-control', `public, max-age=${file.maxAge}`)
-    if (file.md5) ctx.set('content-md5', file.md5)
+
+    if (file.md5) {
+      ctx.set('content-md5', file.md5)
+    }
 
     if (ctx.method === 'HEAD') {
       return
@@ -177,7 +190,11 @@ const staticCache = (options: Opts) => {
       })
     }
 
-    if (options.extraHeaders && Array.isArray(options.extraHeaders) && options.extraHeaders.length) {
+    if (
+      options.extraHeaders &&
+      Array.isArray(options.extraHeaders) &&
+      options.extraHeaders.length
+    ) {
       options.extraHeaders.forEach((header) => {
         for (let h in header) {
           ctx.append(h, header[h])
