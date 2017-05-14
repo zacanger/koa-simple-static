@@ -73,5 +73,6 @@
   },
   "engines": {
     "node": ">= 7.6.0"
-  }
+  },
+  "typings": "koa-simple-static.d.ts"
 }
