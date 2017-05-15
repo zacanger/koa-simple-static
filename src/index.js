@@ -71,6 +71,18 @@ const staticCache = (options: Opts) => {
       return
     }
 
+    if (
+      options.extraHeaders &&
+      Array.isArray(options.extraHeaders) &&
+      options.extraHeaders.length
+    ) {
+      options.extraHeaders.forEach((header) => {
+        for (let h in header) {
+          ctx.append(h, header[h])
+        }
+      })
+    }
+
     // decode for `/%E4%B8%AD%E6%96%87`
     // normalize for `//index`
     let filename = safeDecodeURIComponent(normalize(ctx.path))
@@ -187,18 +199,6 @@ const staticCache = (options: Opts) => {
       stream.on('data', hash.update.bind(hash))
       stream.on('end', () => {
         file.md5 = hash.digest('base64')
-      })
-    }
-
-    if (
-      options.extraHeaders &&
-      Array.isArray(options.extraHeaders) &&
-      options.extraHeaders.length
-    ) {
-      options.extraHeaders.forEach((header) => {
-        for (let h in header) {
-          ctx.append(h, header[h])
-        }
       })
     }
 
