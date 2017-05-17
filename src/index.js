@@ -1,21 +1,14 @@
 // @flow
 
 import { createHash } from 'crypto'
+import { normalize, join, basename, sep } from 'path'
 import { createReadStream, statSync, readFileSync } from 'mz/fs'
 import { gzip, createGzip } from 'mz/zlib'
-import { normalize, join, basename, sep } from 'path'
 import { lookup } from 'mime-types'
 import compressible from 'compressible'
 import readDir from 'fs-readdir-recursive'
 import { Context } from 'koa'
-
-const safeDecodeURIComponent = (t: string): string => {
-  try {
-    return decodeURIComponent(t)
-  } catch (e) {
-    return t
-  }
-}
+import { safeDecodeURIComponent } from 'zeelib'
 
 const loadFile = (
   name: string,

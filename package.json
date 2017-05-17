@@ -1,7 +1,7 @@
 {
   "name": "koa-simple-static",
   "description": "Simple caching static file server for Koa 2.",
-  "version": "0.2.5",
+  "version": "0.2.6",
   "author": {
     "name": "Zac Anger",
     "email": "zac@zacanger.com",
@@ -41,7 +41,8 @@
     "compressible": "2.0.10",
     "fs-readdir-recursive": "1.0.0",
     "mime-types": "2.1.15",
-    "mz": "2.6.0"
+    "mz": "2.6.0",
+    "zeelib": "0.7.50"
   },
   "devDependencies": {
     "babel-cli": "6.24.1",
