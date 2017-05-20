@@ -60,7 +60,6 @@ console.log(`Serving on ${port}!`)
   * Please _add_ tests, if you're adding functionality.
   * My top priorities right now:
     * Using Node's `zlib` and `fs` instead of `mz`
-    * Removing `regenerator`
     * Adding typings for TypeScript users
 
 ## License

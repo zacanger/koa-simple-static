@@ -1,9 +1,8 @@
 {
-  "presets": [ "env", "babili" ],
+  "presets": [ "latest-minimal" ],
   "plugins": [
     "transform-flow-strip-types",
     "transform-export-extensions",
-    "transform-runtime",
     "transform-es2015-modules-commonjs"
     ],
   "comments": false
