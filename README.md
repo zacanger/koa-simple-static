@@ -60,6 +60,7 @@ console.log(`Serving on ${port}!`)
   * Please _add_ tests, if you're adding functionality.
   * My top priorities right now:
     * Using Node's `zlib` and `fs` instead of `mz`
+    * Exporting Flow types for users
     * Adding typings for TypeScript users
 
 ## License
