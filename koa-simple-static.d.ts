@@ -8,4 +8,4 @@ declare function serve (opts: {
 }): Middleware
 
 declare namespace serve {}
-export = serve
+export default serve
