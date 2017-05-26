@@ -1,9 +1,8 @@
 {
   "presets": [ "latest-minimal" ],
   "plugins": [
-    "transform-flow-strip-types",
+    "transform-flow-comments",
     "transform-export-extensions",
     "transform-es2015-modules-commonjs"
-    ],
-  "comments": false
+  ]
 }

@@ -1,7 +1,7 @@
 {
   "name": "koa-simple-static",
   "description": "Simple caching static file server for Koa 2.",
-  "version": "0.3.1",
+  "version": "0.3.2",
   "author": {
     "name": "Zac Anger",
     "email": "zac@zacanger.com",
@@ -42,14 +42,14 @@
     "fs-readdir-recursive": "1.0.0",
     "mime-types": "2.1.15",
     "mz": "2.6.0",
-    "zeelib": "0.7.51"
+    "zeelib": "0.8.3"
   },
   "devDependencies": {
     "babel-cli": "6.24.1",
     "babel-eslint": "7.2.3",
     "babel-plugin-transform-es2015-modules-commonjs": "6.24.1",
     "babel-plugin-transform-export-extensions": "6.22.0",
-    "babel-plugin-transform-flow-strip-types": "6.22.0",
+    "babel-plugin-transform-flow-comments": "6.22.0",
     "babel-preset-latest-minimal": "1.1.2",
     "babel-tape-runner": "2.0.1",
     "bluebird": "3.5.0",
@@ -58,7 +58,7 @@
     "eslint-plugin-babel": "4.1.1",
     "eslint-plugin-flowtype": "2.33.0",
     "eslint-plugin-flowtype-errors": "3.2.1",
-    "eslint-plugin-import": "2.2.0",
+    "eslint-plugin-import": "2.3.0",
     "eslint-plugin-node": "4.2.2",
     "eslint-plugin-promise": "3.5.0",
     "eslint-plugin-standard": "3.0.1",
