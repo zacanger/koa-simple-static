@@ -21,6 +21,16 @@ app.use(serve({
 }))
 ```
 
+If you're on Node < 8.0.0, you'll need to use Babel in front of your server.
+
+```javascript
+require('babel-register')({
+  babelrc: false,
+  presets: [ require('babel-preset-latest-minimal') ]
+})
+require('./server')
+```
+
 ### Options
 
 * `dir : str` &mdash; directory you want to serve
