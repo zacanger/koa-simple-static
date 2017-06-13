@@ -43,7 +43,7 @@ type Opts = {
   maxAge: ?number
 }
 
-const staticCache = (options: Opts) => {
+const simpleStatic = (options: Opts) => {
   const dir = options.dir
   options.prefix = '/'
   const files = {}
@@ -207,4 +207,4 @@ const staticCache = (options: Opts) => {
   }
 }
 
-export default staticCache
+export default simpleStatic
