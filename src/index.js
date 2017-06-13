@@ -8,9 +8,16 @@ import { lookup } from 'mime-types'
 import compressible from 'compressible'
 import readDir from 'fs-readdir-recursive'
 import type { Context } from 'koa'
-import { safeDecodeURIComponent } from 'zeelib'
 
 type Next = () => Promise<any>
+
+const safeDecodeURIComponent = (str: string): string => {
+  try {
+    return decodeURIComponent(str)
+  } catch (_) {
+    return str
+  }
+}
 
 const loadFile = (
   name: string,
