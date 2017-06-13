@@ -7,8 +7,10 @@ import { gzip, createGzip } from 'mz/zlib'
 import { lookup } from 'mime-types'
 import compressible from 'compressible'
 import readDir from 'fs-readdir-recursive'
-import { Context } from 'koa'
+import type { Context } from 'koa'
 import { safeDecodeURIComponent } from 'zeelib'
+
+type Next = () => Promise<any>
 
 const loadFile = (
   name: string,
@@ -51,7 +53,7 @@ const staticCache = (options: Opts) => {
     loadFile(name, dir, options, files)
   })
 
-  return async (ctx: Context, next: () => any) => {
+  return async (ctx: Context, next: Next) => {
     // only accept HEAD and GET
     if (ctx.method !== 'HEAD' && ctx.method !== 'GET') {
       await next()
