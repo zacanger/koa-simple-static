@@ -186,7 +186,7 @@ const simpleStatic = (options: Opts) => {
       return
     }
 
-    const stream = createReadStream(file.path)
+    const stream = await createReadStream(file.path)
 
     // update file hash
     if (!file.md5) {

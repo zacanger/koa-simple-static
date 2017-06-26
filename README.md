@@ -68,8 +68,10 @@ console.log(`Serving on ${port}!`)
     and `flow`.
   * Please run tests!
   * Please _add_ tests, if you're adding functionality.
+    * But also, think really hard about adding any functionality. This is
+      already complete.
   * My top priorities right now:
-    * Using Node's `zlib` and `fs` instead of `mz`
+    * Using Node's `zlib` and `fs` (maybe with `util.promisify`) instead of `mz`
 
 ## License
 
