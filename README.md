@@ -21,16 +21,6 @@ app.use(serve({
 }))
 ```
 
-If you're on Node < 8.0.0, you'll need to use Babel in front of your server.
-
-```javascript
-require('babel-register')({
-  babelrc: false,
-  presets: [ require('babel-preset-latest-minimal') ]
-})
-require('./server')
-```
-
 ### Options
 
 * `dir: str` &mdash; directory you want to serve
@@ -61,8 +51,22 @@ console.log(`Serving on ${port}!`)
 
 ## FAQ
 
-* Why?
-  * Because I didn't like the existing options.
+* Why is this a thing?
+  * Because I didn't like the existing options. Before this module, you could
+    have a static file server for Koa with good defaults that didn't cache, or
+    one that did cache with weird defaults (like not defaulting to
+    `index.html`). Now, you can have the good parts of both.
+* I'm getting errors but my code is fine?
+  * If you're on Node pre-8.0.0, you'll need to use Babel in front of your server:
+    ```javascript
+    require('babel-register')({
+      babelrc: false,
+      presets: [ require('babel-preset-latest-minimal') ]
+    })
+    require('./server')
+    ```
+  * I recommend using `babel-register` in development and compiling for
+    production.
 * Is this production-ready?
   * Yes.
 
