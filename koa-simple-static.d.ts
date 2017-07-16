@@ -1,11 +1,11 @@
 import { Middleware } from 'koa'
 
-declare function serve (opts: {
+declare function simpleStatic (opts: {
   dir: string
   gzip?: boolean
   maxAge?: number
   extraHeaders?: object[]
 }): Middleware
 
-declare namespace serve {}
-export default serve
+declare namespace simpleStatic {}
+export default simpleStatic
