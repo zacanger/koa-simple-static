@@ -54,10 +54,11 @@ console.log(`Serving on ${port}!`)
 * Why is this a thing?
   * Because I didn't like the existing options. Before this module, you could
     have a static file server for Koa with good defaults that didn't cache, or
-    one that did cache with weird defaults (like not defaulting to
+    one that did cache with weird defaults (like not falling back to
     `index.html`). Now, you can have the good parts of both.
 * I'm getting errors but my code is fine?
-  * If you're on Node pre-8.0.0, you'll need to use Babel in front of your server:
+  * If you're on Node pre-8.0.0, you'll need to use Babel in front of your server.
+  Example:
     ```javascript
     require('babel-register')({
       babelrc: false,
