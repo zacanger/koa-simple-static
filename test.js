@@ -297,10 +297,10 @@ test('it should serve files with gzip stream', (t) => {
 })
 
 test('it should work fine when new file added', (t) => {
+  fs.writeFileSync('a.js', 'hello world')
   const app = new Koa()
   app.use(staticCache({ dir: '.' }))
   const server = http.createServer(app.callback())
-  fs.writeFileSync('a.js', 'hello world')
 
   request(server)
     .get('/a.js')
@@ -313,10 +313,10 @@ test('it should work fine when new file added', (t) => {
 })
 
 test('it should 404 when new hidden file added', (t) => {
+  fs.writeFileSync('.a.js', 'hello world')
   const app = new Koa()
   app.use(staticCache({ dir: '.' }))
   const server = http.createServer(app.callback())
-  fs.writeFileSync('.a.js', 'hello world')
 
   request(server)
     .get('/.a.js')
@@ -357,10 +357,10 @@ test('it should 404 when is folder without index.html', (t) => {
 })
 
 test('it should fall back to index.html if available', (t) => {
+  fs.writeFileSync('index.html', 'hello world')
   const app = new Koa()
   app.use(staticCache({ dir: '.' }))
   const server = http.createServer(app.callback())
-  fs.writeFileSync('index.html', 'hello world')
 
   request(server)
     .get('/')
@@ -369,6 +369,20 @@ test('it should fall back to index.html if available', (t) => {
       t.deepEqual(res.status, 200, is200)
       t.deepEqual(res.text, 'hello world', 'has correct text')
       fs.unlinkSync('index.html')
+      t.end()
+    })
+})
+
+test('it should not load files above options.dir', (t) => {
+  const app = new Koa()
+  app.use(staticCache({ dir: path.resolve(__dirname, 'src') }))
+  const server = http.createServer(app.callback())
+
+  request(server)
+    .get('/%2E%2E/package.json')
+    .end((err, res) => {
+      if (err) throw err
+      t.deepEqual(res.status, 404, is404)
       t.end()
     })
 })

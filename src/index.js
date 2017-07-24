@@ -44,7 +44,7 @@ type Opts = {
 }
 
 const simpleStatic = (options: Opts) => {
-  const dir = options.dir
+  const dir = normalize(options.dir)
   options.prefix = '/'
   const files = {}
   const enableGzip = !!options.gzip
@@ -102,6 +102,13 @@ const simpleStatic = (options: Opts) => {
 
       if (filename.charAt(0) === sep) {
         filename = filename.slice(1)
+      }
+
+      // disallow ../
+      const fullPath = join(dir, filename)
+      if (fullPath.indexOf(dir) !== 0 && fullPath !== 'index.html') {
+        await next()
+        return
       }
 
       let s
