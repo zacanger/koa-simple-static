@@ -38,7 +38,6 @@ const loadFile = (
 type Opts = {
   dir: string,
   extraHeaders: ?Object[],
-  gzip: ?bool,
   prefix: ?string,
   maxAge: ?number
 }
@@ -47,7 +46,6 @@ const simpleStatic = (options: Opts) => {
   const dir = normalize(options.dir)
   options.prefix = '/'
   const files = {}
-  const enableGzip = !!options.gzip
 
   readDir(dir).forEach((name) => {
     loadFile(name, dir, options, files)
@@ -127,10 +125,7 @@ const simpleStatic = (options: Opts) => {
     }
 
     ctx.status = 200
-
-    if (enableGzip) {
-      ctx.vary('Accept-Encoding')
-    }
+    ctx.vary('Accept-Encoding')
 
     if (!file.buffer) {
       const stats = await statSync(file.path)
@@ -177,7 +172,6 @@ const simpleStatic = (options: Opts) => {
     }
 
     const shouldGzip =
-      enableGzip &&
       file.length > 1024 &&
       acceptGzip &&
       compressible(file.type)

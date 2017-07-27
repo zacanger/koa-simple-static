@@ -4,8 +4,13 @@ Simple caching static file server for Koa 2.
 
 --------
 
-Fork of [koa-static-cache](https://github.com/koajs/static-cache) with better
-options.
+Fork of [koa-static-cache](https://github.com/koajs/static-cache) with simpler
+options:
+
+* Caches: preloads files and dynamically loads new ones if found
+* Falls back to `/index.html` if available
+* Gzips if request's `accept-encoding` includes gzip
+* Accepts extra headers for served files
 
 ## Installation
 
@@ -25,7 +30,6 @@ app.use(serve({
 
 * `dir: str` &mdash; directory you want to serve
 * `maxAge: ?number = 0` &mdash; cache control max age (in seconds)
-* `gzip: ?bool = false` &mdash; compress with gzip when request's `accept-encoding` includes gzip
 * `extraHeaders: ?Object[]` &mdash; any extra headers you wish to set for requests served by this module
   * The format for this is `[ { 'Link': '</foo.js>; rel=preload; as=script' }, { 'Set-Cookie': 'foo=bar; path=/;' } ]`
 
@@ -41,7 +45,6 @@ const port = process.env.PORT || 4444
 
 app.use(serve({
   dir: resolve(__dirname, 'public'),
-  gzip: true,
   extraHeaders: [ { 'X-Something-Whatever': 'foo, bar' } ]
 }))
 
