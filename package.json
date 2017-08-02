@@ -42,7 +42,7 @@
     "fs-readdir-recursive": "1.0.0",
     "mime-types": "2.1.16",
     "mz": "2.6.0",
-    "zeelib": "2.0.1"
+    "zeelib": "2.0.4"
   },
   "devDependencies": {
     "babel-cli": "6.24.1",
@@ -68,7 +68,7 @@
     "koa": "2.3.0",
     "supertest": "3.0.0",
     "tap-spec": "4.1.1",
-    "tape": "4.7.0"
+    "tape": "4.8.0"
   },
   "engines": {
     "node": ">= 7.6.0"
