@@ -85,8 +85,6 @@ console.log(`Serving on ${port}!`)
   * Please _add_ tests, if you're adding functionality.
     * But also, think really hard about adding any functionality. This is
       already complete.
-  * My top priorities right now:
-    * Using Node's `zlib` and `fs` (maybe with `util.promisify`) instead of `mz`
 
 ## License
 
