@@ -70,7 +70,7 @@ const simpleStatic = (options: Opts) => {
       options.extraHeaders.length
     ) {
       options.extraHeaders.forEach((header) => {
-        for (let h in header) {
+        for (let h in header) { // eslint-disable-line guard-for-in
           ctx.append(h, header[h])
         }
       })

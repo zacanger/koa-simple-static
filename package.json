@@ -13,8 +13,7 @@
     "build": "babel src/index.js --out-file lib/index.js",
     "clean": "if [ -d lib ] ; then rm -r lib ; fi && mkdir lib",
     "prebuild": "npm run test && npm run clean",
-    "test": "npm run test:lint && npm run test:tape",
-    "_test": "npm run test:lint && npm run test:flow && npm run test:tape",
+    "test": "npm run test:lint && npm run test:flow && npm run test:tape",
     "test:flow": "flow && flow stop",
     "test:lint": "eslint -c .eslintrc.json src",
     "test:tape": "babel-tape-runner test.js | tap-spec"
@@ -43,7 +42,7 @@
     "fs-readdir-recursive": "1.0.0",
     "mime-types": "2.1.16",
     "mz": "2.6.0",
-    "zeelib": "3.0.4"
+    "zeelib": "3.0.8"
   },
   "devDependencies": {
     "babel-cli": "6.26.0",
@@ -55,7 +54,7 @@
     "babel-tape-runner": "2.0.1",
     "bluebird": "3.5.0",
     "eslint": "4.5.0",
-    "eslint-config-jane": "0.5.2",
+    "eslint-config-jane": "0.5.3",
     "eslint-plugin-babel": "4.1.2",
     "eslint-plugin-flowtype": "2.35.0",
     "eslint-plugin-flowtype-errors": "3.3.1",
