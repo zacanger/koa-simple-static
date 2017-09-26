@@ -38,17 +38,17 @@ const loadFile = (
 type Opts = {
   dir: string,
   extraHeaders: ?Object[],
-  prefix: ?string,
   maxAge: ?number
 }
 
 const simpleStatic = (options: Opts) => {
   const dir = normalize(options.dir)
-  options.prefix = '/'
+  const prefix = '/'
   const files = {}
 
+  const lfOpts = Object.assign({}, options, { prefix })
   readDir(dir).forEach((name) => {
-    loadFile(name, dir, options, files)
+    loadFile(name, dir, lfOpts, files)
   })
 
   return async (ctx: Context, next: Next) => {
@@ -59,7 +59,7 @@ const simpleStatic = (options: Opts) => {
     }
 
     // check prefix first to avoid calculate
-    if (ctx.path.indexOf(options.prefix) !== 0) {
+    if (ctx.path.indexOf(prefix) !== 0) {
       await next()
       return
     }
