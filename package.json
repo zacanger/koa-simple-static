@@ -38,11 +38,11 @@
     "static"
   ],
   "dependencies": {
-    "compressible": "2.0.11",
+    "compressible": "2.0.12",
     "fs-readdir-recursive": "1.0.0",
     "mime-types": "2.1.17",
     "mz": "2.7.0",
-    "zeelib": "4.0.0"
+    "zeelib": "4.0.2"
   },
   "devDependencies": {
     "babel-cli": "6.26.0",
@@ -52,16 +52,16 @@
     "babel-plugin-transform-flow-comments": "6.22.0",
     "babel-preset-latest-minimal": "1.1.2",
     "babel-tape-runner": "2.0.1",
-    "eslint": "4.8.0",
-    "eslint-config-jane": "0.6.1",
+    "eslint": "4.10.0",
+    "eslint-config-jane": "0.6.2",
     "eslint-plugin-babel": "4.1.2",
     "eslint-plugin-flowtype": "2.39.1",
-    "eslint-plugin-flowtype-errors": "3.3.2",
-    "eslint-plugin-import": "2.7.0",
-    "eslint-plugin-node": "5.2.0",
-    "eslint-plugin-promise": "3.5.0",
+    "eslint-plugin-flowtype-errors": "3.3.5",
+    "eslint-plugin-import": "2.8.0",
+    "eslint-plugin-node": "5.2.1",
+    "eslint-plugin-promise": "3.6.0",
     "eslint-plugin-unicorn": "2.1.2",
-    "flow-bin": "0.56.0",
+    "flow-bin": "0.57.3",
     "istanbul": "0.4.5",
     "koa": "2.3.0",
     "supertest": "3.0.0",
