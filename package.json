@@ -11,11 +11,11 @@
   "main": "lib/index.js",
   "scripts": {
     "build": "babel src/index.js --out-file lib/index.js",
-    "clean": "if [ -d lib ] ; then rm -r lib ; fi && mkdir lib",
     "cover": "npm run cover:flow && npm run cover:tape",
     "cover:flow": "flow-coverage-report --config .flow-coverage-report.json",
     "cover:tape": "nyc npm run test:tape",
-    "prebuild": "npm run test && npm run clean",
+    "prebuild": "npm run cover",
+    "preversion": "npm run build",
     "test": "npm run test:lint && npm run test:flow && npm run test:tape",
     "test:flow": "flow && flow stop",
     "test:lint": "eslint -c .eslintrc.json src",
