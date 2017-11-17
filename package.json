@@ -18,13 +18,13 @@
     "test:lint": "eslint -c .eslintrc.json src",
     "test:tape": "babel-tape-runner test.js | tap-spec"
   },
-  "homepage": "https://github.com/zacanger/koa-simple-static#readme",
+  "homepage": "https://github.com/jane/koa-simple-static#readme",
   "repository": {
     "type": "git",
-    "url": "https://github.com/zacanger/koa-simple-static.git"
+    "url": "https://github.com/jane/koa-simple-static.git"
   },
   "bugs": {
-    "url": "https://github.com/zacanger/koa-simple-static/issues"
+    "url": "https://github.com/jane/koa-simple-static/issues"
   },
   "keywords": [
     "cache",
