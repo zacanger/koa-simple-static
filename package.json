@@ -12,6 +12,9 @@
   "scripts": {
     "build": "babel src/index.js --out-file lib/index.js",
     "clean": "if [ -d lib ] ; then rm -r lib ; fi && mkdir lib",
+    "cover": "npm run cover:flow && npm run cover:tape",
+    "cover:flow": "flow-coverage-report --config .flow-coverage-report.json",
+    "cover:tape": "nyc npm run test:tape",
     "prebuild": "npm run test && npm run clean",
     "test": "npm run test:lint && npm run test:flow && npm run test:tape",
     "test:flow": "flow && flow stop",
@@ -62,14 +65,26 @@
     "eslint-plugin-promise": "3.6.0",
     "eslint-plugin-unicorn": "3.0.0",
     "flow-bin": "0.59.0",
+    "flow-coverage-report": "0.4.0",
     "istanbul": "0.4.5",
     "koa": "2.4.1",
+    "nyc": "11.3.0",
     "supertest": "3.0.0",
     "tap-spec": "4.1.1",
     "tape": "4.8.0"
   },
   "engines": {
     "node": ">= 8.0.0"
+  },
+  "nyc": {
+    "include": [
+      "src"
+    ],
+    "require": [
+      "babel-register"
+    ],
+    "sourceMap": true,
+    "instrument": true
   },
   "typings": "koa-simple-static.d.ts"
 }

@@ -54,11 +54,10 @@ console.log(`Serving on ${port}!`)
 
 ## FAQ
 
-* Why is this a thing?
-  * Because I didn't like the existing options. Before this module, you could
-    have a static file server for Koa with good defaults that didn't cache, or
-    one that did cache with weird defaults (like not falling back to
-    `index.html`). Now, you can have the good parts of both.
+* How is this different from other options?
+  * Before this module, you could have a static file server for Koa with good
+    defaults that didn't cache, or one that did cache with weird defaults (like
+    not falling back to `index.html`). Now, you can have the good parts of both.
 * I'm getting errors but my code is fine?
   * If you're on Node pre-8.0.0, you'll need to use Babel in front of your server.
   Example:
@@ -76,15 +75,11 @@ console.log(`Serving on ${port}!`)
 
 ## Contributing
 
-* Please do, if you want! I'll consider any PRs, but no promises.
-* Notes:
-  * This project uses Flow.
-  * It will be easiest if you have your editor configured to work with `eslint`
-    and `flow`.
-  * Please run tests!
-  * Please _add_ tests, if you're adding functionality.
-    * But also, think really hard about adding any functionality. This is
-      already complete.
+* Issues and PRs are welcome! Please keep in mind that this is feature complete.
+* This project uses Flow. It will be easiest if your editor is configured to
+  work with `eslint` and `flow`.
+* Please run tests!
+* If you're changing or adding functionality, please _add_ tests!
 
 ## License
 
