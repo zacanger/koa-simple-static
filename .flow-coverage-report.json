@@ -9,5 +9,8 @@
     "src/*.js"
   ],
   "threshold": 70,
-  "type": "text"
+  "type":  [
+    "text",
+    "html"
+  ]
 }
