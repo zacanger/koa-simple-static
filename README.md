@@ -2,6 +2,9 @@
 
 Simple caching static file server for Koa 2.
 
+[![CircleCI](https://circleci.com/gh/jane/koa-simple-static.svg?style=svg)](https://circleci.com/gh/jane/koa-simple-static)
+[![Coverage Status](https://coveralls.io/repos/github/jane/koa-simple-static/badge.svg?branch=master)](https://coveralls.io/github/jane/koa-simple-static?branch=master)
+
 --------
 
 Fork of [koa-static-cache](https://github.com/koajs/static-cache) with simpler
