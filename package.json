@@ -46,7 +46,7 @@
     "fs-readdir-recursive": "1.1.0",
     "mime-types": "2.1.17",
     "mz": "2.7.0",
-    "zeelib": "4.0.4"
+    "zeelib": "4.0.5"
   },
   "devDependencies": {
     "babel-cli": "6.26.0",
@@ -57,16 +57,15 @@
     "babel-preset-latest-minimal": "1.1.2",
     "babel-tape-runner": "2.0.1",
     "coveralls": "3.0.0",
-    "eslint": "4.12.1",
+    "eslint": "4.13.1",
     "eslint-config-jane": "0.7.1",
     "eslint-plugin-babel": "4.1.2",
-    "eslint-plugin-flowtype": "2.39.1",
-    "eslint-plugin-flowtype-errors": "3.3.6",
+    "eslint-plugin-flowtype": "2.40.1",
     "eslint-plugin-import": "2.8.0",
     "eslint-plugin-node": "5.2.1",
     "eslint-plugin-promise": "3.6.0",
     "eslint-plugin-unicorn": "3.0.0",
-    "flow-bin": "0.60.1",
+    "flow-bin": "0.61.0",
     "flow-coverage-report": "0.4.0",
     "istanbul": "0.4.5",
     "koa": "2.4.1",
