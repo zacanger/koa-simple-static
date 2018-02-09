@@ -3,7 +3,28 @@
   "plugins": [ "flowtype" ],
   "rules": {
     "flowtype/boolean-style": [ 2, "bool" ],
-    "flowtype/no-weak-types": [ 0 ],
-    "flowtype/no-types-missing-file-annotation": [ 0 ]
+    "flowtype/no-weak-types": [ 1 ],
+    "flowtype/no-types-missing-file-annotation": [ 2 ],
+    "flowtype/space-after-type-colon": [ 2 ],
+    "flowtype/no-types-missing-file-annotation": [ 2 ],
+    "flowtype/require-parameter-type": [ 1 ],
+    "flowtype/require-return-type": [
+      2,
+      "always",
+      {
+        "annotateUndefined": "always",
+        "excludeArrowFunctions": "expressionsOnly"
+      }
+    ],
+    "flowtype/require-variable-type": [
+      2,
+      {
+        "excludeVariableTypes": {
+          "const": true,
+          "let": false,
+          "var": false
+        }
+      }
+    ]
   }
 }

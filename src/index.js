@@ -10,25 +10,49 @@ import readDir from 'fs-readdir-recursive'
 import type { Context } from 'koa'
 import { safeDecodeURIComponent } from 'zeelib'
 
-type Next = () => Promise<any>
+type StatFile = {
+  dev: number,
+  mode: number,
+  nlink: number,
+  uid: number,
+  gid: number,
+  rdev: number,
+  blksize: number,
+  ino: number,
+  size: number,
+  blocks: number,
+  atimeMs: number,
+  mtimeMs: number,
+  ctimeMs: number,
+  birthtimeMs: number,
+  atime: Date,
+  mtime: Date,
+  ctime: Date,
+  birthtime: Date
+}
+
+type Next = () => Promise<*>
+
+type ExtraHeader = { [key: string]: string }
 
 const loadFile = (
   name: string,
   dir: string,
-  options: Object,
-  files: Object
-): Object => {
+  options: *,
+  files: *
+): * => {
   const pathname = normalize(join(options.prefix, name))
   const obj = files[pathname] = files[pathname] ? files[pathname] : {}
   const filename = obj.path = join(dir, name)
   const stats = statSync(filename)
-  let buffer = readFileSync(filename)
+  let buffer: Buffer | null = readFileSync(filename)
 
   obj.cacheControl = options.cacheControl
   obj.maxAge = obj.maxAge ? obj.maxAge : options.maxAge || 0
   obj.type = obj.mime = lookup(pathname) || 'application/octet-stream'
   obj.mtime = stats.mtime
   obj.length = stats.size
+  // $FlowFixMe see https://github.com/facebook/flow/blob/v0.65.0/lib/node.js#L359
   obj.md5 = createHash('md5').update(buffer).digest('base64')
   obj.buffer = buffer
   buffer = null
@@ -37,21 +61,22 @@ const loadFile = (
 
 type Opts = {
   dir: string,
-  extraHeaders: ?Object[],
-  maxAge: ?number,
+  extraHeaders?: ExtraHeader[],
+  cacheControl?: number,
+  maxAge?: number,
   prefix: string
 }
 
-const simpleStatic = (options: Opts) => {
+const simpleStatic = (options: Opts): * => {
   const dir = normalize(options.dir)
   options.prefix = '/'
   const files = {}
 
-  readDir(dir).forEach((name) => {
+  readDir(dir).forEach((name: string): void => {
     loadFile(name, dir, options, files)
   })
 
-  return async (ctx: Context, next: Next) => {
+  return async (ctx: Context, next: Next): * => {
     // only accept HEAD and GET
     if (ctx.method !== 'HEAD' && ctx.method !== 'GET') {
       await next()
@@ -69,8 +94,8 @@ const simpleStatic = (options: Opts) => {
       Array.isArray(options.extraHeaders) &&
       options.extraHeaders.length
     ) {
-      options.extraHeaders.forEach((header) => {
-        for (let h in header) { // eslint-disable-line guard-for-in
+      options.extraHeaders.forEach((header: ExtraHeader): void => {
+        for (const h: string in header) { // eslint-disable-line guard-for-in
           ctx.append(h, header[h])
         }
       })
@@ -78,9 +103,9 @@ const simpleStatic = (options: Opts) => {
 
     // decode for `/%E4%B8%AD%E6%96%87`
     // normalize for `//index`
-    let filename = safeDecodeURIComponent(normalize(ctx.path))
+    let filename: string = safeDecodeURIComponent(normalize(ctx.path))
 
-    let file = files[filename]
+    let file: * = files[filename]
 
     // try to load file
     if (!file) {
@@ -90,7 +115,7 @@ const simpleStatic = (options: Opts) => {
       }
 
       // handle index.html
-      let hasIndex
+      let hasIndex: bool = false
       try {
         hasIndex = await statSync(normalize(join(dir, `${filename}/index.html`))).isFile()
       } catch (_) { }
@@ -109,7 +134,7 @@ const simpleStatic = (options: Opts) => {
         return
       }
 
-      let s
+      let s: StatFile
       try {
         s = await statSync(join(dir, filename))
       } catch (err) {
@@ -193,7 +218,7 @@ const simpleStatic = (options: Opts) => {
     if (!file.md5) {
       const hash = createHash('md5')
       stream.on('data', hash.update.bind(hash))
-      stream.on('end', () => {
+      stream.on('end', (): void => {
         file.md5 = hash.digest('base64')
       })
     }
