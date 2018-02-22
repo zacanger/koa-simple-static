@@ -1,7 +1,6 @@
 {
-  "presets": [ "latest-minimal" ],
+  "presets": [ "flow", "latest-minimal" ],
   "plugins": [
-    "transform-flow-comments",
     "transform-export-extensions",
     "transform-es2015-modules-commonjs"
   ]

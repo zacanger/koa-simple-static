@@ -80,3 +80,4 @@ src/.webpack.js
 x/
 .nyc_output/
 flow-coverage/
+/lib

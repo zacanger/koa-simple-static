@@ -9,13 +9,18 @@
   },
   "license": "MIT",
   "main": "lib/index.js",
+  "files": [
+    "lib"
+  ],
   "scripts": {
     "build": "babel src/index.js --out-file lib/index.js",
+    "clean": "rm -rf lib && mkdir lib",
     "cover": "npm run cover:flow && npm run cover:tape",
     "cover:coveralls": "nyc report --reporter=text-lcov | coveralls",
     "cover:flow": "flow-coverage-report --config .flow-coverage-report.json",
     "cover:tape": "nyc npm run test:tape",
-    "prebuild": "npm run test:lint && npm run cover",
+    "postbuild": "flow-copy-source -i \"*.test.js\" src lib",
+    "prebuild": "npm run test:lint && npm run cover && npm run clean",
     "preversion": "npm run build",
     "test": "npm run test:lint && npm run test:flow && npm run test:tape",
     "test:flow": "flow && flow stop",
@@ -42,37 +47,38 @@
     "static"
   ],
   "dependencies": {
-    "compressible": "2.0.12",
+    "compressible": "2.0.13",
     "fs-readdir-recursive": "1.1.0",
-    "mime-types": "2.1.17",
+    "mime-types": "2.1.18",
     "mz": "2.7.0",
-    "zeelib": "6.0.1"
+    "zeelib": "6.1.2"
   },
   "devDependencies": {
     "babel-cli": "6.26.0",
-    "babel-eslint": "8.2.1",
+    "babel-eslint": "8.2.2",
     "babel-plugin-transform-es2015-modules-commonjs": "6.26.0",
     "babel-plugin-transform-export-extensions": "6.22.0",
-    "babel-plugin-transform-flow-comments": "6.22.0",
+    "babel-preset-flow": "6.23.0",
     "babel-preset-latest-minimal": "1.1.2",
     "babel-tape-runner": "2.0.1",
     "coveralls": "3.0.0",
-    "eslint": "4.17.0",
-    "eslint-config-jane": "0.8.2",
+    "eslint": "4.18.1",
+    "eslint-config-jane": "0.10.0",
     "eslint-plugin-babel": "4.1.2",
-    "eslint-plugin-flowtype": "2.44.0",
-    "eslint-plugin-import": "2.8.0",
+    "eslint-plugin-flowtype": "2.46.0",
+    "eslint-plugin-import": "2.9.0",
     "eslint-plugin-node": "6.0.0",
     "eslint-plugin-promise": "3.6.0",
     "eslint-plugin-unicorn": "4.0.2",
-    "flow-bin": "0.65.0",
+    "flow-bin": "0.66.0",
+    "flow-copy-source": "1.3.0",
     "flow-coverage-report": "0.4.1",
     "istanbul": "0.4.5",
     "koa": "2.5.0",
     "nyc": "11.4.1",
     "supertest": "3.0.0",
     "tap-spec": "4.1.1",
-    "tape": "4.8.0"
+    "tape": "4.9.0"
   },
   "engines": {
     "node": ">= 8.0.0"
