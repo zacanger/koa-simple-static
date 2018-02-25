@@ -16,7 +16,6 @@
     "build": "babel src/index.js --out-file lib/index.js",
     "clean": "rm -rf lib && mkdir lib",
     "cover": "npm run cover:flow && npm run cover:tape",
-    "cover:coveralls": "nyc report --reporter=text-lcov | coveralls",
     "cover:flow": "flow-coverage-report --config .flow-coverage-report.json",
     "cover:tape": "nyc npm run test:tape",
     "postbuild": "flow-copy-source -i \"*.test.js\" src lib",
@@ -27,13 +26,13 @@
     "test:lint": "eslint -c .eslintrc.json src",
     "test:tape": "babel-tape-runner test.js | tap-spec"
   },
-  "homepage": "https://github.com/jane/koa-simple-static#readme",
+  "homepage": "https://github.com/zacanger/koa-simple-static#readme",
   "repository": {
     "type": "git",
-    "url": "https://github.com/jane/koa-simple-static.git"
+    "url": "https://github.com/zacanger/koa-simple-static.git"
   },
   "bugs": {
-    "url": "https://github.com/jane/koa-simple-static/issues"
+    "url": "https://github.com/zacanger/koa-simple-static/issues"
   },
   "keywords": [
     "cache",
@@ -51,7 +50,7 @@
     "fs-readdir-recursive": "1.1.0",
     "mime-types": "2.1.18",
     "mz": "2.7.0",
-    "zeelib": "6.1.2"
+    "zeelib": "6.1.4"
   },
   "devDependencies": {
     "babel-cli": "6.26.0",
@@ -61,13 +60,12 @@
     "babel-preset-flow": "6.23.0",
     "babel-preset-latest-minimal": "1.1.2",
     "babel-tape-runner": "2.0.1",
-    "coveralls": "3.0.0",
     "eslint": "4.18.1",
-    "eslint-config-jane": "0.10.0",
+    "eslint-config-jane": "0.11.0",
     "eslint-plugin-babel": "4.1.2",
-    "eslint-plugin-flowtype": "2.46.0",
+    "eslint-plugin-flowtype": "2.46.1",
     "eslint-plugin-import": "2.9.0",
-    "eslint-plugin-node": "6.0.0",
+    "eslint-plugin-node": "6.0.1",
     "eslint-plugin-promise": "3.6.0",
     "eslint-plugin-unicorn": "4.0.2",
     "flow-bin": "0.66.0",
