@@ -35,13 +35,15 @@ type Next = () => Promise<*>
 
 type ExtraHeader = { [key: string]: string }
 
+const prefix = '/'
+
 const loadFile = (
   name: string,
   dir: string,
   options: *,
   files: *
 ): * => {
-  const pathname = normalize(join(options.prefix, name))
+  const pathname = normalize(join(prefix, name))
   const obj = files[pathname] = files[pathname] ? files[pathname] : {}
   const filename = obj.path = join(dir, name)
   const stats = statSync(filename)
@@ -63,13 +65,11 @@ type Opts = {
   dir: string,
   extraHeaders?: ExtraHeader[],
   cacheControl?: number,
-  maxAge?: number,
-  prefix: string
+  maxAge?: number
 }
 
 const simpleStatic = (options: Opts): * => {
   const dir = normalize(options.dir)
-  options.prefix = '/'
   const files = {}
 
   readDir(dir).forEach((name: string): void => {
@@ -84,7 +84,7 @@ const simpleStatic = (options: Opts): * => {
     }
 
     // check prefix first to avoid calculate
-    if (ctx.path.indexOf(options.prefix) !== 0) {
+    if (ctx.path.indexOf(prefix) !== 0) {
       await next()
       return
     }
