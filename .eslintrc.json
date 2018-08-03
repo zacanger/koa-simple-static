@@ -2,6 +2,7 @@
   "extends": [ "eslint-config-zacanger", "plugin:flowtype/recommended" ],
   "plugins": [ "flowtype" ],
   "rules": {
+    "node/no-unsupported-features/es-syntax": 0,
     "flowtype/boolean-style": [ 2, "bool" ],
     "flowtype/no-weak-types": [ 1 ],
     "flowtype/no-types-missing-file-annotation": [ 2 ],
