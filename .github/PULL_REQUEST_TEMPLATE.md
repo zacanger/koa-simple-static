@@ -1,19 +1,18 @@
-## Change Type
+# Change Type
 
 * [ ] Feature
 * [ ] Chore
 * [ ] Bug Fix
 
-## Change Level
+# Change Level
 
 * [ ] major
 * [ ] minor
 * [ ] patch
 
-## Further Information (screenshots, etc)
+# Further Information (screenshots, bug report links, etc.)
 
-#### Relevant Links (bug reports, etc)
-
-## Checklist
+# Checklist
 
 * [ ] Added tests / did not decrease code coverage
+* [ ] Tested in supported environments (common browsers or current and LTS Node)
