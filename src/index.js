@@ -76,7 +76,7 @@ const simpleStatic = (options: Opts): * => {
     loadFile(name, dir, options, files)
   })
 
-  return async (ctx: Context, next: Next): * => {
+  return async (ctx: Context, next: Next): void => {
     // only accept HEAD and GET
     if (ctx.method !== 'HEAD' && ctx.method !== 'GET') {
       await next()
