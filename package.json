@@ -47,20 +47,20 @@
     "static"
   ],
   "dependencies": {
-    "compressible": "2.0.14",
+    "compressible": "2.0.16",
     "fs-readdir-recursive": "1.1.0",
-    "mime-types": "2.1.19",
+    "mime-types": "2.1.22",
     "mz": "2.7.0",
-    "zeelib": "8.0.0"
+    "zeelib": "8.5.0"
   },
   "devDependencies": {
-    "@babel/cli": "7.0.0",
-    "@babel/core": "7.0.0",
+    "@babel/cli": "7.2.3",
+    "@babel/core": "7.4.0",
     "@babel/preset-env": "7.4.2",
     "@babel/preset-flow": "7.0.0",
     "@babel/register": "7.4.0",
-    "babel-eslint": "9.0.0",
-    "babel-plugin-add-module-exports": "0.2.1",
+    "babel-eslint": "10.0.1",
+    "babel-plugin-add-module-exports": "1.0.0",
     "babel-tape-runner": "3.0.0",
     "eslint": "5.2.0",
     "eslint-config-zacanger": "3.4.0",
@@ -79,7 +79,7 @@
     "sortpack": "1.1.3",
     "supertest": "3.1.0",
     "tap-spec": "5.0.0",
-    "tape": "4.9.1"
+    "tape": "4.10.1"
   },
   "engines": {
     "node": ">=10.0.0"
