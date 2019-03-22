@@ -3,15 +3,15 @@
   "description": "Simple caching static file server for Koa 2.",
   "version": "1.1.3",
   "author": {
-    "name": "Zac Anger",
     "email": "zac@zacanger.com",
+    "name": "Zac Anger",
     "url": "http://zacanger.com"
   },
   "license": "MIT",
   "main": "lib/index.js",
   "files": [
-    "lib",
-    "koa-simple-static.d.ts"
+    "koa-simple-static.d.ts",
+    "lib"
   ],
   "scripts": {
     "build": "babel src/index.js --out-file lib/index.js",
@@ -20,7 +20,7 @@
     "cover:flow": "flow-coverage-report --config .flow-coverage-report.json",
     "cover:tape": "nyc npm run test:tape",
     "postbuild": "flow-copy-source -i \"*.test.js\" src lib",
-    "prebuild": "npm run test:lint && npm run cover && npm run clean",
+    "prebuild": "npm run test:lint && npm run cover && npm run clean && sortpack",
     "preversion": "npm run build",
     "test": "npm run test:lint && npm run test:flow && npm run test:tape",
     "test:flow": "flow && flow stop",
@@ -54,12 +54,14 @@
     "zeelib": "8.0.0"
   },
   "devDependencies": {
-    "babel-cli": "6.26.0",
-    "babel-eslint": "8.2.6",
+    "@babel/cli": "7.0.0",
+    "@babel/core": "7.0.0",
+    "@babel/preset-env": "7.4.2",
+    "@babel/preset-flow": "7.0.0",
+    "@babel/register": "7.4.0",
+    "babel-eslint": "9.0.0",
     "babel-plugin-add-module-exports": "0.2.1",
-    "babel-preset-flow": "6.23.0",
-    "babel-preset-latest-minimal": "1.1.2",
-    "babel-tape-runner": "2.0.1",
+    "babel-tape-runner": "3.0.0",
     "eslint": "5.2.0",
     "eslint-config-zacanger": "3.4.0",
     "eslint-plugin-babel": "5.1.0",
@@ -74,27 +76,28 @@
     "istanbul": "0.4.5",
     "koa": "2.5.2",
     "nyc": "12.0.2",
+    "sortpack": "1.1.3",
     "supertest": "3.1.0",
     "tap-spec": "5.0.0",
     "tape": "4.9.1"
   },
   "engines": {
-    "node": ">= 8.0.0"
+    "node": ">=10.0.0"
   },
   "nyc": {
     "include": [
       "src"
     ],
-    "require": [
-      "babel-register"
-    ],
-    "sourceMap": true,
     "instrument": true,
     "reporter": [
       "text",
       "html",
       "json"
-    ]
+    ],
+    "require": [
+      "@babel/register"
+    ],
+    "sourceMap": true
   },
   "typings": "koa-simple-static.d.ts"
 }

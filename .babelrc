@@ -1,5 +1,8 @@
 {
-  "presets": [ "flow", "latest-minimal" ],
+  "presets": [
+    "@babel/preset-flow",
+    "@babel/preset-env"
+  ],
   "plugins": [
     "add-module-exports"
   ]
