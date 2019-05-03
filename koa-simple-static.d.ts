@@ -8,4 +8,4 @@ declare function simpleStatic (opts: {
 }): Middleware
 
 declare namespace simpleStatic {}
-export default simpleStatic
+export = simpleStatic
