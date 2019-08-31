@@ -83,6 +83,4 @@ console.log(`Serving on ${port}!`)
 * Please run tests!
 * If you're changing or adding functionality, please _add_ tests!
 
-## License
-
-[MIT](./LICENSE.md)
+[LICENSE](./LICENSE.md)
