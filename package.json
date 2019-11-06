@@ -99,5 +99,10 @@
     ],
     "sourceMap": true
   },
-  "typings": "koa-simple-static.d.ts"
+  "typings": "koa-simple-static.d.ts",
+  "funding": {
+    "type": "ko-fi",
+    "url": "https://ko-fi.com/zacanger"
+  }
+
 }
