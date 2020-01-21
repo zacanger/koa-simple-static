@@ -11,6 +11,7 @@ import staticCache from '.'
 const dir = __dirname
 // file/magic doesn't actually know what a TS file is
 const tsType = 'video/mp2t'
+const textType = 'text/plain; charset=utf-8'
 const correctStatus = (s: number) => `has ${s} status`
 const is200 = correctStatus(200)
 const is404 = correctStatus(404)
@@ -235,8 +236,10 @@ test('it should set the etag and content-md5 headers', (t) => {
     })
 })
 
-// TODO
 test('it should serve files with gzip buffer', (t) => {
+  const filePath = path.resolve(dir, 'foo.txt')
+  fs.writeFileSync(filePath, 'hello world'.repeat(1000))
+
   const app = new Koa()
   app.use(
     staticCache({
@@ -247,29 +250,30 @@ test('it should serve files with gzip buffer', (t) => {
   )
   const server = http.createServer(app.callback())
 
-  const index = fs.readFileSync(indexTs)
-  zlib.gzip(index, (err, content) => {
+  const f = fs.readFileSync(filePath)
+  zlib.gzip(f, (err, content) => {
     if (err) {
       throw err
     }
     request(server)
-      .get('/index.ts')
+      .get('/foo.txt')
       .set('Accept-Encoding', 'gzip')
       .end((err, res) => {
         if (err) {
           throw err
         }
         t.deepEqual(res.status, 200, is200)
-        t.ok(index.toString())
+        t.ok(f.toString(), 'file is ok')
         t.equal(res.header['vary'], 'Accept-Encoding', correctV)
         t.equal(res.header['content-length'], `${content.length}`, correctCL)
         t.equal(res.header['content-encoding'], 'gzip', correctGZ)
         t.equal(res.header['cache-control'], 'public, max-age=0', correctCC)
-        t.equal(res.header['content-type'], tsType, correctCT)
+        t.equal(res.header['content-type'], textType, correctCT)
         t.ok(res.header['content-length'], correctCL)
         t.ok(res.header['last-modified'], correctLM)
         t.ok(res.header['etag'], correctET)
         etag = res.header.etag
+        fs.unlinkSync(filePath)
         t.end()
       })
   })
@@ -307,8 +311,10 @@ test('it should not serve files with gzip buffer when accept encoding not includ
     })
 })
 
-// TODO
 test('it should serve files with gzip stream', (t) => {
+  const filePath = path.resolve(dir, 'foo.txt')
+  fs.writeFileSync(filePath, 'hello world'.repeat(1000))
+
   const app = new Koa()
   app.use(
     staticCache({
@@ -318,27 +324,28 @@ test('it should serve files with gzip stream', (t) => {
   )
   const server = http.createServer(app.callback())
 
-  const index = fs.readFileSync(indexTs)
-  zlib.gzip(index, (err) => {
+  const f = fs.readFileSync(filePath)
+  zlib.gzip(f, (err) => {
     if (err) {
       throw err
     }
     request(server)
-      .get('/index.ts')
+      .get('/foo.txt')
       .set('Accept-Encoding', 'gzip')
       .end((err, res) => {
         if (err) {
           throw err
         }
-        t.equal(res.header['content-type'], tsType, correctCT)
+        t.equal(res.header['content-type'], textType, correctCT)
         t.equal(res.header['content-encoding'], 'gzip', correctGZ)
         t.deepEqual(res.status, 200, is200)
-        t.ok(index.toString(), 'index is ok')
+        t.ok(f.toString(), 'file is ok')
         t.equal(res.header['cache-control'], 'public, max-age=0', correctCC)
         t.ok(res.header['last-modified'], correctLM)
         t.ok(res.header['etag'], correctET)
         t.equal(res.header['vary'], 'Accept-Encoding', correctV)
         etag = res.header.etag
+        fs.unlinkSync(filePath)
         t.end()
       })
   })

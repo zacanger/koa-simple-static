@@ -81,7 +81,7 @@ const simpleStatic = (options: Opts) => {
   // eslint-disable-next-line max-statements
   return async (ctx: Context, next: Next): Promise<void> => {
     // only accept HEAD and GET
-    if (ctx.method !== 'HEAD' && ctx.method !== 'GET') {
+    if (!['HEAD', 'GET'].includes(ctx.method)) {
       await next()
       return
     }
