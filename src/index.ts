@@ -1,5 +1,3 @@
-// @flow
-
 import { createHash } from 'crypto'
 import { normalize, join, basename, sep } from 'path'
 import { createReadStream, statSync, readFileSync } from 'mz/fs'
@@ -7,45 +5,44 @@ import { gzip, createGzip } from 'mz/zlib'
 import { lookup } from 'mime-types'
 import compressible from 'compressible'
 import readDir from 'fs-readdir-recursive'
-import type { Context } from 'koa'
+import { Context } from 'koa'
 import { safeDecodeURIComponent } from 'zeelib'
 
 type StatFile = {
-  dev: number,
-  mode: number,
-  nlink: number,
-  uid: number,
-  gid: number,
-  rdev: number,
-  blksize: number,
-  ino: number,
-  size: number,
-  blocks: number,
-  atimeMs: number,
-  mtimeMs: number,
-  ctimeMs: number,
-  birthtimeMs: number,
-  atime: Date,
-  mtime: Date,
-  ctime: Date,
+  dev: number
+  mode: number
+  nlink: number
+  uid: number
+  gid: number
+  rdev: number
+  blksize: number
+  ino: number
+  size: number
+  blocks: number
+  atimeMs: number
+  mtimeMs: number
+  ctimeMs: number
+  birthtimeMs: number
+  atime: Date
+  mtime: Date
+  ctime: Date
   birthtime: Date
 }
 
-type Next = () => Promise<*>
+type Next = () => Promise<void>
 
 type ExtraHeader = { [key: string]: string }
 
 const prefix = '/'
 
-const loadFile = (
-  name: string,
-  dir: string,
-  options: *,
-  files: *
-): * => {
+type FileOpts = {
+  cacheControl?: number
+  maxAge?: number
+}
+const loadFile = (name: string, dir: string, options: FileOpts, files: any) => {
   const pathname = normalize(join(prefix, name))
-  const obj = files[pathname] = files[pathname] ? files[pathname] : {}
-  const filename = obj.path = join(dir, name)
+  const obj = (files[pathname] = files[pathname] ? files[pathname] : {})
+  const filename = (obj.path = join(dir, name))
   const stats = statSync(filename)
   let buffer: Buffer | null = readFileSync(filename)
 
@@ -54,21 +51,24 @@ const loadFile = (
   obj.type = obj.mime = lookup(pathname) || 'application/octet-stream'
   obj.mtime = stats.mtime
   obj.length = stats.size
-  // $FlowFixMe see https://github.com/facebook/flow/blob/v0.65.0/lib/node.js#L359
-  obj.md5 = createHash('md5').update(buffer).digest('base64')
+  obj.md5 = createHash('md5')
+    .update(buffer)
+    .digest('base64')
   obj.buffer = buffer
   buffer = null
   return obj
 }
 
 type Opts = {
-  dir: string,
-  extraHeaders?: ExtraHeader[],
-  cacheControl?: number,
+  dir: string
+  extraHeaders?: ExtraHeader[]
+  cacheControl?: number
   maxAge?: number
+  gzip?: boolean
+  buffer?: boolean
 }
 
-const simpleStatic = (options: Opts): * => {
+const simpleStatic = (options: Opts) => {
   const dir = normalize(options.dir)
   const files = {}
 
@@ -76,7 +76,7 @@ const simpleStatic = (options: Opts): * => {
     loadFile(name, dir, options, files)
   })
 
-  return async (ctx: Context, next: Next): void => {
+  return async (ctx: Context, next: Next): Promise<void> => {
     // only accept HEAD and GET
     if (ctx.method !== 'HEAD' && ctx.method !== 'GET') {
       await next()
@@ -95,7 +95,8 @@ const simpleStatic = (options: Opts): * => {
       options.extraHeaders.length
     ) {
       options.extraHeaders.forEach((header: ExtraHeader): void => {
-        for (const h: string in header) { // eslint-disable-line guard-for-in
+        for (const h in header) {
+          // eslint-disable-line guard-for-in
           ctx.append(h, header[h])
         }
       })
@@ -105,7 +106,8 @@ const simpleStatic = (options: Opts): * => {
     // normalize for `//index`
     let filename: string = safeDecodeURIComponent(normalize(ctx.path))
 
-    let file: * = files[filename]
+    // @ts-ignore this indexing is fine
+    let file: any = files[filename]
 
     // try to load file
     if (!file) {
@@ -115,10 +117,13 @@ const simpleStatic = (options: Opts): * => {
       }
 
       // handle index.html
-      let hasIndex: bool = false
+      let hasIndex: boolean = false
       try {
-        hasIndex = await statSync(normalize(join(dir, `${filename}/index.html`))).isFile()
-      } catch (_) { }
+        // @ts-ignore isFile is not in the types
+        hasIndex = await statSync(
+          normalize(join(dir, `${filename}/index.html`))
+        ).isFile()
+      } catch (_) {}
       if (hasIndex) {
         filename = `${filename}/index.html`
       }
@@ -141,6 +146,7 @@ const simpleStatic = (options: Opts): * => {
         await next()
         return
       }
+      // @ts-ignore isFile is not in the types
       if (!s.isFile()) {
         await next()
         return
@@ -197,9 +203,7 @@ const simpleStatic = (options: Opts): * => {
     }
 
     const shouldGzip =
-      file.length > 1024 &&
-      acceptGzip &&
-      compressible(file.type)
+      file.length > 1024 && acceptGzip && compressible(file.type)
 
     if (file.buffer) {
       if (shouldGzip) {
