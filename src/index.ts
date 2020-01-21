@@ -39,6 +39,8 @@ type FileOpts = {
   cacheControl?: number
   maxAge?: number
 }
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 const loadFile = (name: string, dir: string, options: FileOpts, files: any) => {
   const pathname = normalize(join(prefix, name))
   const obj = (files[pathname] = files[pathname] ? files[pathname] : {})
@@ -76,6 +78,7 @@ const simpleStatic = (options: Opts) => {
     loadFile(name, dir, options, files)
   })
 
+  // eslint-disable-next-line max-statements
   return async (ctx: Context, next: Next): Promise<void> => {
     // only accept HEAD and GET
     if (ctx.method !== 'HEAD' && ctx.method !== 'GET') {
@@ -84,7 +87,7 @@ const simpleStatic = (options: Opts) => {
     }
 
     // check prefix first to avoid calculate
-    if (ctx.path.indexOf(prefix) !== 0) {
+    if (!ctx.path.startsWith(prefix)) {
       await next()
       return
     }
@@ -95,6 +98,7 @@ const simpleStatic = (options: Opts) => {
       options.extraHeaders.length
     ) {
       options.extraHeaders.forEach((header: ExtraHeader): void => {
+        // eslint-disable-next-line fp/no-loops, guard-for-in
         for (const h in header) {
           // eslint-disable-line guard-for-in
           ctx.append(h, header[h])
@@ -106,12 +110,14 @@ const simpleStatic = (options: Opts) => {
     // normalize for `//index`
     let filename: string = safeDecodeURIComponent(normalize(ctx.path))
 
+    /* eslint-disable @typescript-eslint/no-explicit-any */
     // @ts-ignore this indexing is fine
     let file: any = files[filename]
+    /* eslint-any @typescript-eslint/no-explicit-any */
 
     // try to load file
     if (!file) {
-      if (basename(filename)[0] === '.') {
+      if (basename(filename).startsWith('.')) {
         await next()
         return
       }
@@ -119,28 +125,31 @@ const simpleStatic = (options: Opts) => {
       // handle index.html
       let hasIndex: boolean = false
       try {
+        /* eslint-disable @typescript-eslint/await-thenable */
         // @ts-ignore isFile is not in the types
         hasIndex = await statSync(
           normalize(join(dir, `${filename}/index.html`))
         ).isFile()
+        /* eslint-enable @typescript-eslint/await-thenable */
       } catch (_) {}
       if (hasIndex) {
         filename = `${filename}/index.html`
       }
 
-      if (filename.charAt(0) === sep) {
+      if (filename.startsWith(sep)) {
         filename = filename.slice(1)
       }
 
       // disallow ../
       const fullPath = join(dir, filename)
-      if (fullPath.indexOf(dir) !== 0 && fullPath !== 'index.html') {
+      if (!fullPath.startsWith(dir) && fullPath !== 'index.html') {
         await next()
         return
       }
 
       let s: StatFile
       try {
+        // eslint-disable-next-line @typescript-eslint/await-thenable
         s = await statSync(join(dir, filename))
       } catch (err) {
         await next()
@@ -159,6 +168,7 @@ const simpleStatic = (options: Opts) => {
     ctx.vary('Accept-Encoding')
 
     if (!file.buffer) {
+      // eslint-disable-next-line @typescript-eslint/await-thenable
       const stats = await statSync(file.path)
       if (stats.mtime > file.mtime) {
         file.mtime = stats.mtime
@@ -216,6 +226,7 @@ const simpleStatic = (options: Opts) => {
       return
     }
 
+    // eslint-disable-next-line @typescript-eslint/await-thenable
     const stream = await createReadStream(file.path)
 
     // update file hash

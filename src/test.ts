@@ -30,7 +30,9 @@ test('it should accept abnormal path', (t) => {
   request(server)
     .get('//index.ts')
     .end((err, res) => {
-      if (err) throw err
+      if (err) {
+        throw err
+      }
       t.deepEqual(res.status, 200, is200)
       t.end()
     })
@@ -45,7 +47,9 @@ test('it should serve files', (t) => {
   request(server)
     .get('/index.ts')
     .end((err, res) => {
-      if (err) throw err
+      if (err) {
+        throw err
+      }
       t.deepEqual(res.status, 200, is200)
       t.equal(res.header['cache-control'], 'public, max-age=0', correctCC)
       t.equal(res.header['content-type'], tsType, correctCT)
@@ -70,7 +74,9 @@ test('it should serve files as buffers', (t) => {
   request(server)
     .get('/index.ts')
     .end((err, res) => {
-      if (err) throw err
+      if (err) {
+        throw err
+      }
       t.deepEqual(res.status, 200, is200)
       t.equal(res.header['cache-control'], 'public, max-age=0', correctCC)
       t.equal(res.header['content-type'], tsType, correctCT)
@@ -90,7 +96,9 @@ test('it should serve recursive files', (t) => {
   request(server)
     .get('/index.ts')
     .end((err, res) => {
-      if (err) throw err
+      if (err) {
+        throw err
+      }
       t.deepEqual(res.status, 200, is200)
       t.equal(res.header['cache-control'], 'public, max-age=0')
       t.equal(res.header['content-type'], tsType, correctCT)
@@ -109,7 +117,9 @@ test('it should not serve hidden files', (t) => {
   request(server)
     .get('/.gitignore')
     .end((err, res) => {
-      if (err) throw err
+      if (err) {
+        throw err
+      }
       t.deepEqual(res.status, 404, is404)
       t.end()
     })
@@ -124,7 +134,9 @@ test('it should support conditional HEAD requests', (t) => {
     .head('/index.ts')
     .set('If-None-Match', etag)
     .end((err, res) => {
-      if (err) throw err
+      if (err) {
+        throw err
+      }
       t.deepEqual(res.status, 304, is304)
       t.end()
     })
@@ -139,7 +151,9 @@ test('it should support conditional GET requests', (t) => {
     .get('/index.ts')
     .set('If-None-Match', etag)
     .end((err, res) => {
-      if (err) throw err
+      if (err) {
+        throw err
+      }
       t.deepEqual(res.status, 304, is304)
       t.end()
     })
@@ -153,7 +167,9 @@ test('it should support HEAD', (t) => {
   request(server)
     .head('/index.ts')
     .end((err, res) => {
-      if (err) throw err
+      if (err) {
+        throw err
+      }
       t.deepEqual(res.status, 200, is200)
       t.deepEqual(res.body, {}, 'has empty body')
       t.end()
@@ -168,7 +184,9 @@ test('it should support 404 Not Found for other Methods to allow downstream', (t
   request(server)
     .put('/index.ts')
     .end((err, res) => {
-      if (err) throw err
+      if (err) {
+        throw err
+      }
       t.deepEqual(res.status, 404, is404)
       t.end()
     })
@@ -182,7 +200,9 @@ test('it should ignore query strings', (t) => {
   request(server)
     .get('/index.ts?query=string')
     .end((err, res) => {
-      if (err) throw err
+      if (err) {
+        throw err
+      }
       t.deepEqual(res.status, 200, is200)
       t.end()
     })
@@ -202,7 +222,9 @@ test('it should set the etag and content-md5 headers', (t) => {
   request(server)
     .get('/index.ts')
     .end((err, res) => {
-      if (err) throw err
+      if (err) {
+        throw err
+      }
       t.deepEqual(res.status, 200, is200)
       t.equal(res.header['etag'], `"${md5}"`, correctET)
       t.equal(res.header['content-md5'], md5, correctHeader('content-md5'))
@@ -223,12 +245,16 @@ test('it should serve files with gzip buffer', (t) => {
 
   const index = fs.readFileSync('index.ts')
   zlib.gzip(index, (err, content) => {
-    if (err) throw err
+    if (err) {
+      throw err
+    }
     request(server)
       .get('/index.ts')
       .set('Accept-Encoding', 'gzip')
       .end((err, res) => {
-        if (err) throw err
+        if (err) {
+          throw err
+        }
         t.deepEqual(res.status, 200, is200)
         t.ok(index.toString())
         t.equal(res.header['vary'], 'Accept-Encoding', correctV)
@@ -261,7 +287,9 @@ test('it should not serve files with gzip buffer when accept encoding not includ
     .get('/index.ts')
     .set('Accept-Encoding', '')
     .end((err, res) => {
-      if (err) throw err
+      if (err) {
+        throw err
+      }
       t.equal(res.header['content-type'], tsType)
       t.deepEqual(res.status, 200, is200)
       t.ok(index.toString(), 'has index')
@@ -286,13 +314,17 @@ test('it should serve files with gzip stream', (t) => {
   const server = http.createServer(app.callback())
 
   const index = fs.readFileSync('index.ts')
-  zlib.gzip(index, (err, content) => {
-    if (err) throw err
+  zlib.gzip(index, (err) => {
+    if (err) {
+      throw err
+    }
     request(server)
       .get('/index.ts')
       .set('Accept-Encoding', 'gzip')
       .end((err, res) => {
-        if (err) throw err
+        if (err) {
+          throw err
+        }
         t.equal(res.header['content-type'], tsType, correctCT)
         t.equal(res.header['content-encoding'], 'gzip', correctGZ)
         t.deepEqual(res.status, 200, is200)
@@ -316,7 +348,9 @@ test('it should work fine when new file added', (t) => {
   request(server)
     .get('/a.js')
     .end((err, res) => {
-      if (err) throw err
+      if (err) {
+        throw err
+      }
       t.deepEqual(res.status, 200, is200)
       fs.unlinkSync('a.js')
       t.end()
@@ -332,7 +366,9 @@ test('it should 404 when new hidden file added', (t) => {
   request(server)
     .get('/.a.js')
     .end((err, res) => {
-      if (err) throw err
+      if (err) {
+        throw err
+      }
       t.deepEqual(res.status, 404, is404)
       fs.unlinkSync('.a.js')
       t.end()
@@ -347,7 +383,9 @@ test('it should 404 when file not exist', (t) => {
   request(server)
     .get('/a.js')
     .end((err, res) => {
-      if (err) throw err
+      if (err) {
+        throw err
+      }
       t.deepEqual(res.status, 404, is404)
       t.end()
     })
@@ -361,7 +399,9 @@ test('it should 404 when is folder without index.html', (t) => {
   request(server)
     .get('/')
     .end((err, res) => {
-      if (err) throw err
+      if (err) {
+        throw err
+      }
       t.deepEqual(res.status, 404, is404)
       t.end()
     })
@@ -376,7 +416,9 @@ test('it should fall back to index.html if available', (t) => {
   request(server)
     .get('/')
     .end((err, res) => {
-      if (err) throw err
+      if (err) {
+        throw err
+      }
       t.deepEqual(res.status, 200, is200)
       t.deepEqual(res.text, 'hello world', 'has correct text')
       fs.unlinkSync('index.html')
@@ -392,7 +434,9 @@ test('it should not load files above options.dir', (t) => {
   request(server)
     .get('/%2E%2E/package.json')
     .end((err, res) => {
-      if (err) throw err
+      if (err) {
+        throw err
+      }
       t.deepEqual(res.status, 404, is404)
       t.end()
     })
