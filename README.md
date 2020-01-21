@@ -17,7 +17,7 @@ options:
 ## Installation
 
 ```
-npm i -S koa-simple-static
+npm i koa-simple-static
 ```
 
 ## Usage
