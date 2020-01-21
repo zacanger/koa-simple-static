@@ -14,16 +14,15 @@
     "lib"
   ],
   "scripts": {
-    "_test": "run-s -s test:lint test:ts cover",
     "build": "tsc",
     "clean": "rm -rf lib && mkdir lib",
     "cover": "nyc npm run test:tape",
     "prebuild": "run-s -s test clean",
     "preversion": "npm run build",
-    "test": "run-s -s test:lint test:ts test:tape",
+    "test": "run-s -s test:lint test:ts cover",
     "test-server": "node test-server",
     "test:lint": "eslint --ext .ts -c .eslintrc.json src",
-    "test:tape": "ts-node src/test.ts | tap-spec",
+    "test:tape": "tape -r ts-node/register src/test.ts | tap-spec",
     "test:ts": "tsc --noEmit"
   },
   "homepage": "https://github.com/zacanger/koa-simple-static#readme",
@@ -81,8 +80,11 @@
     "node": ">=12.0.0"
   },
   "nyc": {
+    "extension": [
+      ".ts"
+    ],
     "include": [
-      "src"
+      "src/index.ts"
     ],
     "instrument": true,
     "reporter": [
@@ -95,7 +97,6 @@
     ],
     "sourceMap": true
   },
-  "typings": "koa-simple-static.d.ts",
   "funding": {
     "type": "ko-fi",
     "url": "https://ko-fi.com/zacanger"
