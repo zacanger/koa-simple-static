@@ -55,6 +55,9 @@ app.listen(port, () => {
 })
 ```
 
+**Important** if you're using `require`, you'll need to
+`require('koa-simple-static').default`.
+
 ## FAQ
 
 * How is this different from other options?

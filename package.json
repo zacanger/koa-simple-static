@@ -20,6 +20,7 @@
     "prebuild": "run-s -s test clean",
     "preversion": "npm run build",
     "test": "run-s -s test:lint test:ts cover",
+    "test-server": "node test-server",
     "test:lint": "eslint --ext .ts -c .eslintrc.json src",
     "test:tape": "ts-node src/test.ts | tap-spec",
     "test:ts": "tsc --noEmit"
