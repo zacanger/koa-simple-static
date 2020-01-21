@@ -1,31 +1,20 @@
 {
-  "extends": [ "eslint-config-zacanger", "plugin:flowtype/recommended" ],
-  "plugins": [ "flowtype" ],
+  "root": true,
+  "plugins": [
+    "zacanger"
+  ],
+  "extends": [
+    "plugin:zacanger/recommended",
+    "plugin:zacanger/typescript",
+    "plugin:zacanger/prettier-ts",
+    "plugin:zacanger/jest"
+  ],
+  "parser": "@typescript-eslint/parser",
+  "parserOptions": {
+    "project": "./tsconfig.json"
+  },
   "rules": {
-    "node/no-unsupported-features/es-syntax": 0,
-    "flowtype/boolean-style": [ 2, "bool" ],
-    "flowtype/no-weak-types": [ 1 ],
-    "flowtype/no-types-missing-file-annotation": [ 2 ],
-    "flowtype/space-after-type-colon": [ 2 ],
-    "flowtype/no-types-missing-file-annotation": [ 2 ],
-    "flowtype/require-parameter-type": [ 1 ],
-    "flowtype/require-return-type": [
-      2,
-      "always",
-      {
-        "annotateUndefined": "always",
-        "excludeArrowFunctions": "expressionsOnly"
-      }
-    ],
-    "flowtype/require-variable-type": [
-      2,
-      {
-        "excludeVariableTypes": {
-          "const": true,
-          "let": false,
-          "var": false
-        }
-      }
-    ]
+    "fp/no-unused-expression": 0,
+    "fp/no-nil": 0
   }
 }

@@ -78,8 +78,8 @@ console.log(`Serving on ${port}!`)
 ## Contributing
 
 * Issues and PRs are welcome! Please keep in mind that this is feature complete.
-* This project uses Flow. It will be easiest if your editor is configured to
-  work with `eslint` and `flow`.
+* This project uses TypeScript. It will be easiest if your editor is configured to
+  work with `eslint` and `tsc`.
 * Please run tests!
 * If you're changing or adding functionality, please _add_ tests!
 

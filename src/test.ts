@@ -6,14 +6,14 @@ import request from 'supertest'
 import Koa from 'koa'
 import http from 'http'
 import path from 'path'
-import staticCache from './src'
+import staticCache from '.'
 
-const jsType = 'application/javascript; charset=utf-8'
-const correctStatus = (s) => `has ${s} status`
+const tsType = 'text/plain; charset=utf-8'
+const correctStatus = (s: number) => `has ${s} status`
 const is200 = correctStatus(200)
 const is404 = correctStatus(404)
 const is304 = correctStatus(304)
-const correctHeader = (s) => `has correct ${s}`
+const correctHeader = (s: string) => `has correct ${s}`
 const correctCC = correctHeader('cache-control')
 const correctCT = correctHeader('content-type')
 const correctCL = correctHeader('content-length')
@@ -28,7 +28,7 @@ test('it should accept abnormal path', (t) => {
   const server = http.createServer(app.callback())
 
   request(server)
-    .get('//src/index.js')
+    .get('//index.ts')
     .end((err, res) => {
       if (err) throw err
       t.deepEqual(res.status, 200, is200)
@@ -36,46 +36,48 @@ test('it should accept abnormal path', (t) => {
     })
 })
 
-let etag
+let etag: string
 test('it should serve files', (t) => {
   const app = new Koa()
   app.use(staticCache({ dir: '.' }))
   const server = http.createServer(app.callback())
 
   request(server)
-    .get('/src/index.js')
+    .get('/index.ts')
     .end((err, res) => {
       if (err) throw err
       t.deepEqual(res.status, 200, is200)
       t.equal(res.header['cache-control'], 'public, max-age=0', correctCC)
-      t.equal(res.header['content-type'], jsType, correctCT)
+      t.equal(res.header['content-type'], tsType, correctCT)
       t.ok(res.header['content-length'], correctCL)
       t.ok(res.header['last-modified'], correctLM)
       t.ok(res.header['etag'], correctET)
-      etag = res.headers.etag
+      etag = res.header.etag
       t.end()
     })
 })
 
 test('it should serve files as buffers', (t) => {
   const app = new Koa()
-  app.use(staticCache({
-    dir: '.',
-    buffer: true
-  }))
+  app.use(
+    staticCache({
+      dir: '.',
+      buffer: true,
+    })
+  )
   const server = http.createServer(app.callback())
 
   request(server)
-    .get('/src/index.js')
+    .get('/index.ts')
     .end((err, res) => {
       if (err) throw err
       t.deepEqual(res.status, 200, is200)
       t.equal(res.header['cache-control'], 'public, max-age=0', correctCC)
-      t.equal(res.header['content-type'], jsType, correctCT)
+      t.equal(res.header['content-type'], tsType, correctCT)
       t.ok(res.header['content-length'], correctCL)
       t.ok(res.header['last-modified'], correctLM)
       t.ok(res.header['etag'], correctET)
-      etag = res.headers.etag
+      etag = res.header.etag
       t.end()
     })
 })
@@ -86,12 +88,12 @@ test('it should serve recursive files', (t) => {
   const server = http.createServer(app.callback())
 
   request(server)
-    .get('/src/index.js')
+    .get('/index.ts')
     .end((err, res) => {
       if (err) throw err
       t.deepEqual(res.status, 200, is200)
       t.equal(res.header['cache-control'], 'public, max-age=0')
-      t.equal(res.header['content-type'], jsType, correctCT)
+      t.equal(res.header['content-type'], tsType, correctCT)
       t.ok(res.header['content-length'], correctCL)
       t.ok(res.header['last-modified'], correctLM)
       t.ok(res.header['etag'], correctET)
@@ -119,7 +121,7 @@ test('it should support conditional HEAD requests', (t) => {
   const server = http.createServer(app.callback())
 
   request(server)
-    .head('/src/index.js')
+    .head('/index.ts')
     .set('If-None-Match', etag)
     .end((err, res) => {
       if (err) throw err
@@ -134,7 +136,7 @@ test('it should support conditional GET requests', (t) => {
   const server = http.createServer(app.callback())
 
   request(server)
-    .get('/src/index.js')
+    .get('/index.ts')
     .set('If-None-Match', etag)
     .end((err, res) => {
       if (err) throw err
@@ -149,7 +151,7 @@ test('it should support HEAD', (t) => {
   const server = http.createServer(app.callback())
 
   request(server)
-    .head('/src/index.js')
+    .head('/index.ts')
     .end((err, res) => {
       if (err) throw err
       t.deepEqual(res.status, 200, is200)
@@ -164,7 +166,7 @@ test('it should support 404 Not Found for other Methods to allow downstream', (t
   const server = http.createServer(app.callback())
 
   request(server)
-    .put('/src/index.js')
+    .put('/index.ts')
     .end((err, res) => {
       if (err) throw err
       t.deepEqual(res.status, 404, is404)
@@ -178,7 +180,7 @@ test('it should ignore query strings', (t) => {
   const server = http.createServer(app.callback())
 
   request(server)
-    .get('/src/index.js?query=string')
+    .get('/index.ts?query=string')
     .end((err, res) => {
       if (err) throw err
       t.deepEqual(res.status, 200, is200)
@@ -191,11 +193,14 @@ test('it should set the etag and content-md5 headers', (t) => {
   app.use(staticCache({ dir: '.' }))
   const server = http.createServer(app.callback())
 
-  const pk = fs.readFileSync('package.json')
-  const md5 = crypto.createHash('md5').update(pk).digest('base64')
+  const pk = fs.readFileSync('index.ts')
+  const md5 = crypto
+    .createHash('md5')
+    .update(pk)
+    .digest('base64')
 
   request(server)
-    .get('/package.json')
+    .get('/index.ts')
     .end((err, res) => {
       if (err) throw err
       t.deepEqual(res.status, 200, is200)
@@ -207,18 +212,20 @@ test('it should set the etag and content-md5 headers', (t) => {
 
 test('it should serve files with gzip buffer', (t) => {
   const app = new Koa()
-  app.use(staticCache({
-    dir: '.',
-    buffer: true,
-    gzip: true
-  }))
+  app.use(
+    staticCache({
+      dir: '.',
+      buffer: true,
+      gzip: true,
+    })
+  )
   const server = http.createServer(app.callback())
 
-  const index = fs.readFileSync('src/index.js')
+  const index = fs.readFileSync('index.ts')
   zlib.gzip(index, (err, content) => {
     if (err) throw err
     request(server)
-      .get('/src/index.js')
+      .get('/index.ts')
       .set('Accept-Encoding', 'gzip')
       .end((err, res) => {
         if (err) throw err
@@ -228,11 +235,11 @@ test('it should serve files with gzip buffer', (t) => {
         t.equal(res.header['content-length'], `${content.length}`, correctCL)
         t.equal(res.header['content-encoding'], 'gzip', correctGZ)
         t.equal(res.header['cache-control'], 'public, max-age=0', correctCC)
-        t.equal(res.header['content-type'], jsType, correctCT)
+        t.equal(res.header['content-type'], tsType, correctCT)
         t.ok(res.header['content-length'], correctCL)
         t.ok(res.header['last-modified'], correctLM)
         t.ok(res.header['etag'], correctET)
-        etag = res.headers.etag
+        etag = res.header.etag
         t.end()
       })
   })
@@ -240,20 +247,22 @@ test('it should serve files with gzip buffer', (t) => {
 
 test('it should not serve files with gzip buffer when accept encoding not include gzip', (t) => {
   const app = new Koa()
-  app.use(staticCache({
-    dir: '.',
-    buffer: true,
-    gzip: true
-  }))
+  app.use(
+    staticCache({
+      dir: '.',
+      buffer: true,
+      gzip: true,
+    })
+  )
   const server = http.createServer(app.callback())
 
-  const index = fs.readFileSync('src/index.js')
+  const index = fs.readFileSync('index.ts')
   request(server)
-    .get('/src/index.js')
+    .get('/index.ts')
     .set('Accept-Encoding', '')
     .end((err, res) => {
       if (err) throw err
-      t.equal(res.header['content-type'], jsType)
+      t.equal(res.header['content-type'], tsType)
       t.deepEqual(res.status, 200, is200)
       t.ok(index.toString(), 'has index')
       t.equal(res.header['cache-control'], 'public, max-age=0', correctCC)
@@ -268,21 +277,23 @@ test('it should not serve files with gzip buffer when accept encoding not includ
 
 test('it should serve files with gzip stream', (t) => {
   const app = new Koa()
-  app.use(staticCache({
-    dir: '.',
-    gzip: true
-  }))
+  app.use(
+    staticCache({
+      dir: '.',
+      gzip: true,
+    })
+  )
   const server = http.createServer(app.callback())
 
-  const index = fs.readFileSync('src/index.js')
+  const index = fs.readFileSync('index.ts')
   zlib.gzip(index, (err, content) => {
     if (err) throw err
     request(server)
-      .get('/src/index.js')
+      .get('/index.ts')
       .set('Accept-Encoding', 'gzip')
       .end((err, res) => {
         if (err) throw err
-        t.equal(res.header['content-type'], jsType, correctCT)
+        t.equal(res.header['content-type'], tsType, correctCT)
         t.equal(res.header['content-encoding'], 'gzip', correctGZ)
         t.deepEqual(res.status, 200, is200)
         t.ok(index.toString(), 'index is ok')
@@ -290,7 +301,7 @@ test('it should serve files with gzip stream', (t) => {
         t.ok(res.header['last-modified'], correctLM)
         t.ok(res.header['etag'], correctET)
         t.equal(res.header['vary'], 'Accept-Encoding', correctV)
-        etag = res.headers.etag
+        etag = res.header.etag
         t.end()
       })
   })
@@ -348,7 +359,7 @@ test('it should 404 when is folder without index.html', (t) => {
   const server = http.createServer(app.callback())
 
   request(server)
-    .get('/src')
+    .get('/')
     .end((err, res) => {
       if (err) throw err
       t.deepEqual(res.status, 404, is404)
@@ -375,7 +386,7 @@ test('it should fall back to index.html if available', (t) => {
 
 test('it should not load files above options.dir', (t) => {
   const app = new Koa()
-  app.use(staticCache({ dir: path.resolve(__dirname, 'src') }))
+  app.use(staticCache({ dir: '.' }))
   const server = http.createServer(app.callback())
 
   request(server)

@@ -14,18 +14,15 @@
     "lib"
   ],
   "scripts": {
-    "build": "babel src/index.js --out-file lib/index.js",
+    "build": "tsc",
     "clean": "rm -rf lib && mkdir lib",
-    "cover": "npm run cover:flow && npm run cover:tape",
-    "cover:flow": "flow-coverage-report --config .flow-coverage-report.json",
-    "cover:tape": "nyc npm run test:tape",
-    "postbuild": "flow-copy-source -i \"*.test.js\" src lib",
-    "prebuild": "npm run test:lint && npm run cover && npm run clean && sortpack",
+    "cover": "nyc npm run test:tape",
+    "prebuild": "run-s -s test clean",
     "preversion": "npm run build",
-    "test": "npm run test:lint && npm run test:flow && npm run test:tape",
-    "test:flow": "flow check",
-    "test:lint": "eslint -c .eslintrc.json src",
-    "test:tape": "babel-tape-runner test.js | tap-spec"
+    "test": "run-s -s test:lint test:ts cover",
+    "test:lint": "eslint --ext .ts -c .eslintrc.json src",
+    "test:tape": "ts-node src/test.ts | tap-spec",
+    "test:ts": "tsc --noEmit"
   },
   "homepage": "https://github.com/zacanger/koa-simple-static#readme",
   "repository": {
@@ -47,39 +44,35 @@
     "static"
   ],
   "dependencies": {
-    "compressible": "2.0.17",
+    "compressible": "2.0.18",
     "fs-readdir-recursive": "1.1.0",
-    "mime-types": "2.1.24",
+    "mime-types": "2.1.26",
     "mz": "2.7.0",
-    "zeelib": "8.6.0"
+    "zeelib": "11.0.9"
   },
   "devDependencies": {
-    "@babel/cli": "7.4.4",
-    "@babel/core": "7.4.4",
-    "@babel/preset-env": "7.4.4",
-    "@babel/preset-flow": "7.0.0",
-    "@babel/register": "7.4.4",
-    "babel-eslint": "10.0.1",
-    "babel-plugin-add-module-exports": "1.0.2",
-    "babel-tape-runner": "3.0.0",
-    "eslint": "5.16.0",
-    "eslint-config-zacanger": "3.4.2",
-    "eslint-plugin-babel": "5.3.0",
-    "eslint-plugin-flowtype": "3.9.0",
-    "eslint-plugin-import": "2.17.2",
-    "eslint-plugin-node": "9.0.1",
-    "eslint-plugin-promise": "4.1.1",
-    "eslint-plugin-unicorn": "8.0.2",
-    "flow-bin": "0.77.0",
-    "flow-copy-source": "2.0.6",
-    "flow-coverage-report": "0.6.1",
+    "@types/compressible": "2.0.0",
+    "@types/fs-readdir-recursive": "1.0.0",
+    "@types/koa": "2.11.0",
+    "@types/mime-types": "2.1.0",
+    "@types/mz": "2.7.0",
+    "@types/node": "13.1.8",
+    "@types/supertest": "2.0.8",
+    "@types/tape": "4.2.33",
+    "eslint": "6.8.0",
+    "eslint-plugin-zacanger": "1.0.0",
+    "husky": "4.0.10",
     "istanbul": "0.4.5",
-    "koa": "2.7.0",
-    "nyc": "14.1.1",
-    "sortpack": "1.1.6",
+    "koa": "2.11.0",
+    "lint-staged": "10.0.1",
+    "nyc": "15.0.0",
+    "prettier": "1.19.1",
+    "sortpack": "2.0.4",
     "supertest": "4.0.2",
     "tap-spec": "5.0.0",
-    "tape": "4.10.1"
+    "tape": "4.13.0",
+    "ts-node": "8.6.2",
+    "typescript": "3.7.5"
   },
   "engines": {
     "node": ">=10.0.0"
@@ -95,7 +88,7 @@
       "json"
     ],
     "require": [
-      "@babel/register"
+      "ts-node/register"
     ],
     "sourceMap": true
   },
@@ -103,5 +96,18 @@
   "funding": {
     "type": "ko-fi",
     "url": "https://ko-fi.com/zacanger"
+  },
+  "lint-staged": {
+    "*.ts": [
+      "prettier --write"
+    ],
+    "package.json": [
+      "sortpack"
+    ]
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "lint-staged"
+    }
   }
 }
