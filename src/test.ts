@@ -218,10 +218,7 @@ test('it should set the etag and content-md5 headers', (t) => {
   const server = http.createServer(app.callback())
 
   const index = fs.readFileSync(indexTs)
-  const md5 = crypto
-    .createHash('md5')
-    .update(index)
-    .digest('base64')
+  const md5 = crypto.createHash('md5').update(index).digest('base64')
 
   request(server)
     .get('/index.ts')

@@ -53,9 +53,7 @@ const loadFile = (name: string, dir: string, options: FileOpts, files: any) => {
   obj.type = obj.mime = lookup(pathname) || 'application/octet-stream'
   obj.mtime = stats.mtime
   obj.length = stats.size
-  obj.md5 = createHash('md5')
-    .update(buffer)
-    .digest('base64')
+  obj.md5 = createHash('md5').update(buffer).digest('base64')
   obj.buffer = buffer
   buffer = null
   return obj
@@ -63,7 +61,7 @@ const loadFile = (name: string, dir: string, options: FileOpts, files: any) => {
 
 type Opts = {
   dir: string
-  extraHeaders?: ExtraHeader[]
+  extraHeaders?: Array<ExtraHeader>
   cacheControl?: number
   maxAge?: number
   gzip?: boolean
