@@ -129,7 +129,7 @@ const simpleStatic = (options: Opts) => {
           normalize(join(dir, `${filename}/index.html`))
         ).isFile()
         /* eslint-enable @typescript-eslint/await-thenable */
-      } catch (_) {}
+      } catch {}
       if (hasIndex) {
         filename = `${filename}/index.html`
       }
@@ -149,7 +149,7 @@ const simpleStatic = (options: Opts) => {
       try {
         // eslint-disable-next-line @typescript-eslint/await-thenable
         s = await statSync(join(dir, filename))
-      } catch (err) {
+      } catch {
         await next()
         return
       }
