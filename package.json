@@ -53,7 +53,7 @@
     "fs-readdir-recursive": "1.1.0",
     "mime-types": "2.1.27",
     "mz": "2.7.0",
-    "zeelib": "11.1.1"
+    "zeelib": "11.1.2"
   },
   "devDependencies": {
     "@types/compressible": "2.0.0",
@@ -61,11 +61,11 @@
     "@types/koa": "2.11.3",
     "@types/mime-types": "2.1.0",
     "@types/mz": "2.7.1",
-    "@types/node": "14.0.14",
+    "@types/node": "14.0.23",
     "@types/supertest": "2.0.10",
     "@types/tape": "4.13.0",
-    "eslint": "7.3.1",
-    "eslint-plugin-zacanger": "2.0.3",
+    "eslint": "7.5.0",
+    "eslint-plugin-zacanger": "2.0.5",
     "husky": "4.2.5",
     "istanbul": "0.4.5",
     "koa": "2.13.0",
@@ -73,12 +73,12 @@
     "npm-run-all": "4.1.5",
     "nyc": "15.1.0",
     "prettier": "2.0.5",
-    "sortpack": "2.1.5",
+    "sortpack": "2.1.6",
     "supertest": "4.0.2",
     "tap-spec": "5.0.0",
     "tape": "5.0.1",
     "ts-node": "8.10.2",
-    "typescript": "3.9.6"
+    "typescript": "3.9.7"
   },
   "engines": {
     "node": ">=12.0.0"
