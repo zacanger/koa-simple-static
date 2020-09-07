@@ -46,6 +46,7 @@ const loadFile = (name: string, dir: string, options: FileOpts, files: any) => {
   const obj = (files[pathname] = files[pathname] ? files[pathname] : {})
   const filename = (obj.path = join(dir, name))
   const stats = statSync(filename)
+  // eslint-disable-next-line node/prefer-global/buffer
   let buffer: Buffer | null = readFileSync(filename)
 
   obj.cacheControl = options.cacheControl
