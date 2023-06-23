@@ -11,7 +11,7 @@
     "type": "ko-fi",
     "url": "https://ko-fi.com/zacanger"
   },
-  "license": "LGPL-3.0",
+  "license": "MIT",
   "main": "lib/index.js",
   "files": [
     "koa-simple-static.d.ts",
@@ -76,7 +76,7 @@
     "typescript": "5.1.3"
   },
   "engines": {
-    "node": ">=12.0.0"
+    "node": ">=18.0.0"
   },
   "nyc": {
     "extension": [
