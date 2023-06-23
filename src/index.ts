@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/strict-boolean-expressions */
+
 import { createHash } from 'crypto'
 import { normalize, join, basename, sep } from 'path'
 import { createReadStream, statSync, readFileSync } from 'mz/fs'
@@ -5,10 +7,9 @@ import { gzip, createGzip } from 'mz/zlib'
 import { lookup } from 'mime-types'
 import compressible from 'compressible'
 import readDir from 'fs-readdir-recursive'
-import { Context } from 'koa'
-import { safeDecodeURIComponent } from 'zeelib'
+import { Context, Middleware } from 'koa'
 
-type StatFile = {
+interface StatFile {
   dev: number
   mode: number
   nlink: number
@@ -31,25 +32,25 @@ type StatFile = {
 
 type Next = () => Promise<void>
 
-type ExtraHeader = { [key: string]: string }
+interface ExtraHeader { [key: string]: string }
 
 const prefix = '/'
 
-type FileOpts = {
+interface FileOpts {
   cacheControl?: number
   maxAge?: number
 }
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
+// eslint-disable-next-line @typescript-eslint/no-explicit-any,@typescript-eslint/explicit-function-return-type
 const loadFile = (name: string, dir: string, options: FileOpts, files: any) => {
   const pathname = normalize(join(prefix, name))
   const obj = (files[pathname] = files[pathname] ? files[pathname] : {})
   const filename = (obj.path = join(dir, name))
   const stats = statSync(filename)
-  // eslint-disable-next-line node/prefer-global/buffer
   let buffer: Buffer | null = readFileSync(filename)
 
   obj.cacheControl = options.cacheControl
+  // eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing
   obj.maxAge = obj.maxAge ? obj.maxAge : options.maxAge || 0
   obj.type = obj.mime = lookup(pathname) || 'application/octet-stream'
   obj.mtime = stats.mtime
@@ -60,16 +61,16 @@ const loadFile = (name: string, dir: string, options: FileOpts, files: any) => {
   return obj
 }
 
-type Opts = {
+interface Opts {
   dir: string
-  extraHeaders?: Array<ExtraHeader>
+  extraHeaders?: ExtraHeader[]
   cacheControl?: number
   maxAge?: number
   gzip?: boolean
   buffer?: boolean
 }
 
-const simpleStatic = (options: Opts) => {
+const simpleStatic = (options: Opts): Middleware => {
   const dir = normalize(options.dir)
   const files = {}
 
@@ -97,9 +98,7 @@ const simpleStatic = (options: Opts) => {
       options.extraHeaders.length
     ) {
       options.extraHeaders.forEach((header: ExtraHeader): void => {
-        // eslint-disable-next-line fp/no-loops, guard-for-in
         for (const h in header) {
-          // eslint-disable-line guard-for-in
           ctx.append(h, header[h])
         }
       })
@@ -107,10 +106,9 @@ const simpleStatic = (options: Opts) => {
 
     // decode for `/%E4%B8%AD%E6%96%87`
     // normalize for `//index`
-    let filename: string = safeDecodeURIComponent(normalize(ctx.path))
+    let filename: string = decodeURIComponent(normalize(ctx.path))
 
     /* eslint-disable @typescript-eslint/no-explicit-any */
-    // @ts-ignore this indexing is fine
     let file: any = files[filename]
     /* eslint-any @typescript-eslint/no-explicit-any */
 
@@ -125,7 +123,6 @@ const simpleStatic = (options: Opts) => {
       let hasIndex: boolean = false
       try {
         /* eslint-disable @typescript-eslint/await-thenable */
-        // @ts-ignore isFile is not in the types
         hasIndex = await statSync(
           normalize(join(dir, `${filename}/index.html`))
         ).isFile()
@@ -154,7 +151,7 @@ const simpleStatic = (options: Opts) => {
         await next()
         return
       }
-      // @ts-ignore isFile is not in the types
+      // @ts-expect-error isFile is not in the types
       if (!s.isFile()) {
         await next()
         return
@@ -189,6 +186,7 @@ const simpleStatic = (options: Opts) => {
 
     ctx.type = file.type
     ctx.length = file.zipBuffer ? file.zipBuffer.length : file.length
+    // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
     ctx.set('cache-control', `public, max-age=${file.maxAge}`)
 
     if (file.md5) {

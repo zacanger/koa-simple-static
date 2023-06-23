@@ -1,3 +1,5 @@
+/* eslint-disable */
+
 import test from 'tape'
 import fs from 'fs'
 import crypto from 'crypto'
